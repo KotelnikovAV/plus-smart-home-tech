@@ -30,6 +30,14 @@ public class EventClientConfiguration {
             @Value("${producer.port}")
             private String port;
 
+            @Value("${producer.timeUntilClosingMs}")
+            private long timeUntilClosingProducer;
+
+            @Override
+            public long getTimeUntilClosingProducer() {
+                return timeUntilClosingProducer;
+            }
+
             @Override
             public Producer<String, SpecificRecordBase> getProducer() {
                 Properties config = new Properties();

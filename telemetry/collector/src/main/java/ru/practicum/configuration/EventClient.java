@@ -5,4 +5,6 @@ import org.apache.kafka.clients.producer.Producer;
 
 public interface EventClient {
     Producer<String, SpecificRecordBase> getProducer();
+
+    long getTimeUntilClosingProducer();
 }

@@ -28,7 +28,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class SensorEvent {
-    @NotNull
+    @NotBlank
     private String id;
     @NotBlank
     private String hubId;
