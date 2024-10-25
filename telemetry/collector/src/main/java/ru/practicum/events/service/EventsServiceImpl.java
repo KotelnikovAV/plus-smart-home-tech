@@ -7,7 +7,7 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.stereotype.Service;
-import ru.practicum.configuration.EventClient;
+import ru.practicum.configuration.ConfigurationCollectorKafkaProducer;
 import ru.practicum.events.mapper.HubEventMapper;
 import ru.practicum.events.mapper.SensorEventMapper;
 import ru.practicum.events.model.hub.HubEvent;
@@ -21,7 +21,7 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 public class EventsServiceImpl implements EventsService {
     private final Object monitor = new Object();
 
-    private final EventClient eventClient;
+    private final ConfigurationCollectorKafkaProducer configurationCollectorKafkaProducer;
     private Producer<String, SpecificRecordBase> producer;
     private Thread threadForTrackingProducerActivity;
 
@@ -32,7 +32,7 @@ public class EventsServiceImpl implements EventsService {
 
         synchronized (monitor) {
             if (producer == null) {
-                producer = eventClient.getProducer();
+                producer = configurationCollectorKafkaProducer.getProducer();
             }
 
             SensorEventAvro message = SensorEventAvro.newBuilder()
@@ -43,7 +43,7 @@ public class EventsServiceImpl implements EventsService {
                     .build();
 
             ProducerRecord<String, SpecificRecordBase> record =
-                    new ProducerRecord<>(eventClient.getSensorsEventsTopic(), message);
+                    new ProducerRecord<>(configurationCollectorKafkaProducer.getTopics().get("sensors_events"), message);
 
             producer.send(record);
         }
@@ -57,7 +57,7 @@ public class EventsServiceImpl implements EventsService {
 
         synchronized (monitor) {
             if (producer == null) {
-                producer = eventClient.getProducer();
+                producer = configurationCollectorKafkaProducer.getProducer();
             }
 
             HubEventAvro message = HubEventAvro.newBuilder()
@@ -67,7 +67,7 @@ public class EventsServiceImpl implements EventsService {
                     .build();
 
             ProducerRecord<String, SpecificRecordBase> record =
-                    new ProducerRecord<>(eventClient.getHubsEventsTopic(), message);
+                    new ProducerRecord<>(configurationCollectorKafkaProducer.getTopics().get("hubs_events"), message);
             producer.send(record);
         }
         log.info("The hub event has been added to the queue for sending");
@@ -89,7 +89,7 @@ public class EventsServiceImpl implements EventsService {
 
         threadForTrackingProducerActivity = new Thread(() -> {
             try {
-                Thread.sleep(eventClient.getTimeUntilClosingMs());
+                Thread.sleep(configurationCollectorKafkaProducer.getTimeUntilClosingMs());
                 synchronized (monitor) {
                     producer.flush();
                     producer.close();
