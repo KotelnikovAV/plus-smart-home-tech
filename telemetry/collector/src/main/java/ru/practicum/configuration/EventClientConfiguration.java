@@ -12,36 +12,52 @@ import org.springframework.context.annotation.PropertySource;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yaml")
 public class EventClientConfiguration {
 
     @Bean
     public static EventClient getClient() {
         return new EventClient() {
-            @Value("${producer.serializer}")
+            @Value("${collector.kafka.producer.properties.value_serializer}")
             private String serializer;
 
-            @Value("${producer.lingerMs}")
+            @Value("${collector.kafka.producer.properties.lingerMs}")
             private String lingerMs;
 
-            @Value("${producer.batch-size}")
+            @Value("${collector.kafka.producer.properties.batch_size}")
             private String batchSize;
 
-            @Value("${producer.port}")
-            private String port;
+            @Value("${collector.kafka.producer.properties.bootstrap_servers}")
+            private String bootstrap_servers;
 
-            @Value("${producer.timeUntilClosingMs}")
+            @Value("${collector.kafka.producer.properties.timeUntilClosingMs}")
             private long timeUntilClosingProducer;
 
+            @Value("${collector.kafka.producer.topics.sensors_events}")
+            private String sensorsEventsTopic;
+
+            @Value("${collector.kafka.producer.topics.hubs_events}")
+            private String hubsEventsTopic;
+
             @Override
-            public long getTimeUntilClosingProducer() {
+            public long getTimeUntilClosingMs() {
                 return timeUntilClosingProducer;
+            }
+
+            @Override
+            public String getSensorsEventsTopic() {
+                return sensorsEventsTopic;
+            }
+
+            @Override
+            public String getHubsEventsTopic() {
+                return hubsEventsTopic;
             }
 
             @Override
             public Producer<String, SpecificRecordBase> getProducer() {
                 Properties config = new Properties();
-                config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, port);
+                config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrap_servers);
                 config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                         "org.apache.kafka.common.serialization.StringSerializer");
                 config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serializer);

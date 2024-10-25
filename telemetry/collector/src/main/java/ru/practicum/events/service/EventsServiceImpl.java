@@ -1,5 +1,6 @@
 package ru.practicum.events.service;
 
+import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
@@ -18,8 +19,7 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 @RequiredArgsConstructor
 @Slf4j
 public class EventsServiceImpl implements EventsService {
-    private static final String TOPIC_SENSOR_EVENT = "telemetry.sensors.v1";
-    private static final String TOPIC_HUB_EVENT = "telemetry.hubs.v1";
+    private final Object monitor = new Object();
 
     private final EventClient eventClient;
     private Producer<String, SpecificRecordBase> producer;
@@ -30,7 +30,7 @@ public class EventsServiceImpl implements EventsService {
         log.info("The beginning of the process of collecting sensor event");
         startActivityTimerProducer();
 
-        synchronized (TOPIC_SENSOR_EVENT) {
+        synchronized (monitor) {
             if (producer == null) {
                 producer = eventClient.getProducer();
             }
@@ -42,7 +42,8 @@ public class EventsServiceImpl implements EventsService {
                     .setPayload(SensorEventMapper.getSensorEventAvro(sensorEvent))
                     .build();
 
-            ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(TOPIC_SENSOR_EVENT, message);
+            ProducerRecord<String, SpecificRecordBase> record =
+                    new ProducerRecord<>(eventClient.getSensorsEventsTopic(), message);
 
             producer.send(record);
         }
@@ -54,7 +55,7 @@ public class EventsServiceImpl implements EventsService {
         log.info("The beginning of the process of collecting hub event");
         startActivityTimerProducer();
 
-        synchronized (TOPIC_HUB_EVENT) {
+        synchronized (monitor) {
             if (producer == null) {
                 producer = eventClient.getProducer();
             }
@@ -65,13 +66,14 @@ public class EventsServiceImpl implements EventsService {
                     .setPayload(HubEventMapper.getHubEventAvro(hubEvent))
                     .build();
 
-            ProducerRecord<String, SpecificRecordBase> record = new ProducerRecord<>(TOPIC_HUB_EVENT, message);
+            ProducerRecord<String, SpecificRecordBase> record =
+                    new ProducerRecord<>(eventClient.getHubsEventsTopic(), message);
             producer.send(record);
         }
         log.info("The hub event has been added to the queue for sending");
     }
 
-    private void startActivityTimerProducer() {
+    private void stopActivityTimerProducer() {
         if (threadForTrackingProducerActivity != null && threadForTrackingProducerActivity.isAlive()) {
             threadForTrackingProducerActivity.interrupt();
             try {
@@ -80,22 +82,34 @@ public class EventsServiceImpl implements EventsService {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void startActivityTimerProducer() {
+        stopActivityTimerProducer();
 
         threadForTrackingProducerActivity = new Thread(() -> {
-            while (producer != null) {
-                try {
-                    Thread.sleep(eventClient.getTimeUntilClosingProducer());
-                    synchronized (TOPIC_SENSOR_EVENT) {
-                        producer.flush();
-                        producer.close();
-                        producer = null;
-                    }
-                } catch (InterruptedException e) {
-                    break;
+            try {
+                Thread.sleep(eventClient.getTimeUntilClosingMs());
+                synchronized (monitor) {
+                    producer.flush();
+                    producer.close();
+                    producer = null;
                 }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         });
 
         threadForTrackingProducerActivity.start();
+    }
+
+    @PreDestroy
+    private void interruptThreadForTrackingProducerActivityAndCloseProducer() {
+        stopActivityTimerProducer();
+
+        if (producer != null) {
+            producer.flush();
+            producer.close();
+        }
     }
 }

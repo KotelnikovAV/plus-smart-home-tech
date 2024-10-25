@@ -12,11 +12,10 @@ import ru.practicum.events.model.hub.enums.HubsEventType;
 public class DeviceRemovedEvent extends HubEvent {
     @NotNull
     private String id;
-    @NotNull
-    private HubsEventType type;
+    private HubsEventType type = HubsEventType.DEVICE_REMOVED_EVENT;
 
     @Override
     public HubsEventType getType() {
-        return HubsEventType.DEVICE_REMOVED_EVENT;
+        return type;
     }
 }

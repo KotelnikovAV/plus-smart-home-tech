@@ -14,11 +14,10 @@ public class LightSensorEvent extends SensorEvent {
     private Integer linkQuality;
     @NotNull
     private Integer luminosity;
-    @NotNull
-    private SensorEventType type;
+    private SensorEventType type = SensorEventType.LIGHT_SENSOR_EVENT;
 
     @Override
     public SensorEventType getType() {
-        return SensorEventType.LIGHT_SENSOR_EVENT;
+        return type;
     }
 }

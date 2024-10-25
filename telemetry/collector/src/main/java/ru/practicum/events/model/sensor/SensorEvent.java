@@ -35,6 +35,5 @@ public abstract class SensorEvent {
     @NotNull
     private Instant timestamp = Instant.now();
 
-    @NotNull
     public abstract SensorEventType getType();
 }

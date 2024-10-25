@@ -16,11 +16,10 @@ public class ClimateSensorEvent extends SensorEvent {
     private Integer humidity;
     @NotNull
     private Integer co2Level;
-    @NotNull
-    private SensorEventType type;
+    private SensorEventType type = SensorEventType.CLIMATE_SENSOR_EVENT;
 
     @Override
     public SensorEventType getType() {
-        return SensorEventType.CLIMATE_SENSOR_EVENT;
+        return type;
     }
 }

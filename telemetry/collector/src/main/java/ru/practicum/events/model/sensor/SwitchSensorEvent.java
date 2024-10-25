@@ -12,11 +12,10 @@ import ru.practicum.events.model.sensor.enums.SensorEventType;
 public class SwitchSensorEvent extends SensorEvent {
     @NotNull
     private Boolean state;
-    @NotNull
-    private SensorEventType type;
+    private SensorEventType type = SensorEventType.SWITCH_SENSOR_EVENT;
 
     @Override
     public SensorEventType getType() {
-        return SensorEventType.SWITCH_SENSOR_EVENT;
+        return type;
     }
 }

@@ -21,11 +21,10 @@ public class ScenarioAddedEvent extends HubEvent {
     private List<ScenarioCondition> conditions;
     @NotNull
     private List<DeviceAction> actions;
-    @NotNull
-    private HubsEventType type;
+    private HubsEventType type = HubsEventType.SCENARIO_ADDED_EVENT;;
 
     @Override
     public HubsEventType getType() {
-        return HubsEventType.SCENARIO_ADDED_EVENT;
+        return type;
     }
 }

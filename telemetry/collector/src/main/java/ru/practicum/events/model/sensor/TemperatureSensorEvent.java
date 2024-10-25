@@ -14,11 +14,10 @@ public class TemperatureSensorEvent extends SensorEvent {
     private Integer temperatureC;
     @NotNull
     private Integer temperatureF;
-    @NotNull
-    private SensorEventType type;
+    private SensorEventType type = SensorEventType.TEMPERATURE_SENSOR_EVENT;
 
     @Override
     public SensorEventType getType() {
-        return SensorEventType.TEMPERATURE_SENSOR_EVENT;
+        return type;
     }
 }

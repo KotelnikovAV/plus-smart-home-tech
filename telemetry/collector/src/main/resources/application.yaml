@@ -1,0 +1,12 @@
+collector:
+  kafka:
+    producer:
+      properties:
+        bootstrap_servers: localhost:9092
+        value_serializer: serializer.sensor.SensorEventSerializer
+        batch_size: 1000
+        lingerMs: 2000
+        timeUntilClosingMs: 5000
+      topics:
+        sensors_events: telemetry.sensors.v1
+        hubs_events: telemetry.hubs.v1

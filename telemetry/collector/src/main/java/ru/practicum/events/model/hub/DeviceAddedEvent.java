@@ -16,10 +16,10 @@ public class DeviceAddedEvent extends HubEvent {
     @NotNull
     private SensorType deviceType;
     @NotNull
-    private HubsEventType type;
+    private HubsEventType type = HubsEventType.DEVICE_ADDED_EVENT;
 
     @Override
     public HubsEventType getType() {
-        return HubsEventType.DEVICE_ADDED_EVENT;
+        return type;
     }
 }
