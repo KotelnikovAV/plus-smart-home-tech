@@ -1,4 +1,4 @@
-package ru.practicum.events.controller.http;
+package ru.practicum.events.controller.HTTP;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -7,26 +7,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.events.mapper.HubEventMapper;
+import ru.practicum.configuration.ConfigurationHandlers;
 import ru.practicum.events.model.hub.HubEvent;
-import ru.practicum.events.service.EventsService;
-import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("events/hubs")
 public class HubEventController {
-    private final EventsService eventsService;
+    private final ConfigurationHandlers configurationHandlers;
 
     @PostMapping
     public void collectHubEvent(@Valid @RequestBody HubEvent hubEvent) {
         log.info("Received hub event: {}", hubEvent);
-        HubEventAvro message = HubEventAvro.newBuilder()
-                .setHubId(hubEvent.getHubId())
-                .setTimestamp(hubEvent.getTimestamp())
-                .setPayload(HubEventMapper.getHubEventAvro(hubEvent))
-                .build();
-        eventsService.handleHubEvent(message);
+        if (configurationHandlers.getHubEventHandlersHTTP().containsKey(hubEvent.getType())) {
+            configurationHandlers.getHubEventHandlersHTTP().get(hubEvent.getType()).handle(hubEvent);
+        } else {
+            throw new IllegalArgumentException("There is no handler for the event " + hubEvent.getType());
+        }
     }
 }

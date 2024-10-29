@@ -22,7 +22,7 @@ public class EventsServiceImpl implements EventsService {
     private Producer<String, SpecificRecordBase> producer;
 
     @Override
-    public void handleSensorEvent(SensorEventAvro message) {
+    public void collectSensorEvent(SensorEventAvro message) {
         log.info("The beginning of the process of collecting sensor event");
 
         synchronized (monitor) {
@@ -38,7 +38,7 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
-    public void handleHubEvent(HubEventAvro message) {
+    public void collectHubEvent(HubEventAvro message) {
         log.info("The beginning of the process of collecting hub event");
 
         synchronized (monitor) {
