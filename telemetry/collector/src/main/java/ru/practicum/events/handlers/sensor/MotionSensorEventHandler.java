@@ -33,6 +33,7 @@ public class MotionSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(getInstant(sensorEvent.getTimestamp()))
                 .setPayload(getMotionSensorAvro(sensorEvent.getMotionSensor()))
+                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.MOTION_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
@@ -44,6 +45,7 @@ public class MotionSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(getMotionSensorAvro((MotionSensorEvent) sensorEvent))
+                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.MOTION_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }

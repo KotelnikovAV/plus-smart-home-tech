@@ -3,7 +3,7 @@ collector:
     producer:
       properties:
         "bootstrap.servers": localhost:9092
-        "value.serializer": serializer.sensor.SensorEventSerializer
+        "value.serializer": serializer.EventSerializer
         "key.serializer": org.apache.kafka.common.serialization.StringSerializer
         "batch.size": 1000
         "linger.ms": 2000
