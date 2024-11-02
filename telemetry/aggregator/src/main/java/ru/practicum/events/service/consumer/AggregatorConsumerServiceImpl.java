@@ -9,7 +9,9 @@ import org.apache.kafka.common.errors.WakeupException;
 import org.springframework.stereotype.Component;
 import ru.practicum.configuration.ConfigurationAggregatorKafkaConsumer;
 import ru.practicum.events.service.producer.AggregatorProducerService;
-import ru.yandex.practicum.kafka.telemetry.event.*;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorStateAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +77,7 @@ public class AggregatorConsumerServiceImpl implements AggregatorConsumerService 
         if (sensorsSnapshot.getSensorsState().containsKey(event.getId())) {
             SensorStateAvro oldState = sensorsSnapshot.getSensorsState().get(event.getId());
 
-            if (oldState.getTimestamp().isAfter(event.getTimestamp()) || compareData(event, oldState)) {
+            if (oldState.getTimestamp().isAfter(event.getTimestamp()) || event.getPayload().equals(oldState.getData())) {
                 log.info("Event {} handling is not required", event);
                 return Optional.empty();
             } else {
@@ -84,6 +86,7 @@ public class AggregatorConsumerServiceImpl implements AggregatorConsumerService 
                 oldState.setData(event.getPayload());
                 return Optional.of(sensorsSnapshot);
             }
+
         }
 
         SensorStateAvro newState = SensorStateAvro.newBuilder()
@@ -95,39 +98,5 @@ public class AggregatorConsumerServiceImpl implements AggregatorConsumerService 
 
         log.info("Created new snapshot {}", sensorsSnapshot);
         return Optional.of(sensorsSnapshot);
-    }
-
-    private boolean compareData(SensorEventAvro event, SensorStateAvro sensorState) {
-        switch (event.getType()) {
-            case TEMPERATURE_SENSOR_EVENT -> {
-                return ((TemperatureSensorAvro) event.getPayload()).getTemperatureC() ==
-                        ((TemperatureSensorAvro) sensorState.getData()).getTemperatureC();
-            }
-            case CLIMATE_SENSOR_EVENT -> {
-                ClimateSensorAvro climateSensorEvent = (ClimateSensorAvro) event.getPayload();
-                ClimateSensorAvro climateSensorState = (ClimateSensorAvro) sensorState.getData();
-                return climateSensorEvent.getTemperatureC() == climateSensorState.getTemperatureC() &&
-                        climateSensorEvent.getCo2Level() == climateSensorState.getCo2Level() &&
-                        climateSensorEvent.getHumidity() == climateSensorState.getHumidity();
-            }
-            case LIGHT_SENSOR_EVENT -> {
-                LightSensorAvro lightSensorEvent = (LightSensorAvro) event.getPayload();
-                LightSensorAvro lightSensorState = (LightSensorAvro) sensorState.getData();
-                return lightSensorState.getLuminosity() == lightSensorEvent.getLuminosity() &&
-                        lightSensorState.getLinkQuality() == lightSensorEvent.getLinkQuality();
-            }
-            case MOTION_SENSOR_EVENT -> {
-                MotionSensorAvro motionSensorEvent = (MotionSensorAvro) event.getPayload();
-                MotionSensorAvro motionSensorState = (MotionSensorAvro) sensorState.getData();
-                return motionSensorState.getMotion() == motionSensorEvent.getMotion() &&
-                        motionSensorState.getLinkQuality() == motionSensorEvent.getLinkQuality() &&
-                        motionSensorState.getVoltage() == motionSensorEvent.getVoltage();
-            }
-            case SWITCH_SENSOR_EVENT -> {
-                return ((SwitchSensorAvro) event.getPayload()).getState() ==
-                        ((SwitchSensorAvro) sensorState.getData()).getState();
-            }
-        }
-        return false;
     }
 }

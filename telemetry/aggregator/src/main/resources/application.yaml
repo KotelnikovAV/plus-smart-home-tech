@@ -16,10 +16,8 @@ collector:
         "client.id": Consumer-1
         "group.id": some.group.id
         "value.deserializer": deserializer.SensorEventDeserializer
-        "max.poll.records": 100
-        "fetch.max.bytes": 3072000
+        "max.poll.records": 50
         "enable.auto.commit": false
       topics:
-        snapshots: telemetry.snapshots.v1
         sensors_events: telemetry.sensors.v1
       consumeAttemptTimeout: 10000
