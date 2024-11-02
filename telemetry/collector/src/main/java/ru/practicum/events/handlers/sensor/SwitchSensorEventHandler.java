@@ -33,6 +33,7 @@ public class SwitchSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(getInstant(sensorEvent.getTimestamp()))
                 .setPayload(getSwitchSensorAvro(sensorEvent.getSwitchSensor()))
+                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.SWITCH_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
@@ -44,6 +45,7 @@ public class SwitchSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(getSwitchSensorAvro((SwitchSensorEvent) sensorEvent))
+                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.SWITCH_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }

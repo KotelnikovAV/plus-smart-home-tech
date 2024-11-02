@@ -33,6 +33,7 @@ public class TemperatureSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(getInstant(sensorEvent.getTimestamp()))
                 .setPayload(getTemperatureSensorAvro(sensorEvent.getTemperatureSensor()))
+                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.TEMPERATURE_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
@@ -44,6 +45,7 @@ public class TemperatureSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(getTemperatureSensorAvro((TemperatureSensorEvent) sensorEvent))
+                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.TEMPERATURE_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
