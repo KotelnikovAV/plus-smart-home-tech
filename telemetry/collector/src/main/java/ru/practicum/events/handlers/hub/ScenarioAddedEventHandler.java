@@ -75,7 +75,7 @@ public class ScenarioAddedEventHandler extends HubEventHandler {
                     .setOperation(ConditionOperationAvro.valueOf(scenarioConditionProto.getOperation().toString()))
                     .setType(ConditionTypeAvro.valueOf(scenarioConditionProto.getType().toString()))
                     .setSensorId(scenarioConditionProto.getSensorId())
-                    .setValue(scenarioConditionProto.getBoolValue())
+                    .setValue(scenarioConditionProto.getIntValue())
                     .build();
             scenarioConditionsAvro.add(scenarioConditionAvro);
         }

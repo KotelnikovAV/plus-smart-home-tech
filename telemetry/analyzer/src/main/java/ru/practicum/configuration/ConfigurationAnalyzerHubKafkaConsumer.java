@@ -17,8 +17,8 @@ import java.util.Properties;
 @Getter
 @Setter
 @NoArgsConstructor
-@ConfigurationProperties("aggregator.kafka.consumer")
-public class ConfigurationAggregatorKafkaConsumer {
+@ConfigurationProperties("analyzer.kafka.consumer.hub")
+public class ConfigurationAnalyzerHubKafkaConsumer {
     private Map<String, String> properties;
     private Map<String, String> topics;
     private long consumeAttemptTimeout;
