@@ -1,8 +1,10 @@
 package ru.practicum.hub.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import ru.practicum.sensor.model.Sensor;
+import ru.yandex.practicum.kafka.telemetry.event.ActionTypeAvro;
 
 @Entity
 @Table(name = "actions")
@@ -14,13 +16,18 @@ import lombok.*;
 public class Action {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    @NotBlank
-    @Column
-    String type;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "sensor_id")
+    private Sensor sensor;
 
-    @NotBlank
+    @NotNull
     @Column
-    Integer amount;
+    @Enumerated(value = EnumType.STRING)
+    private ActionTypeAvro type;
+
+    @Column
+    private Integer amount;
 }

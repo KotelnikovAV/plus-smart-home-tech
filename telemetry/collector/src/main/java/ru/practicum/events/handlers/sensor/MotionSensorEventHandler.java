@@ -10,6 +10,7 @@ import ru.yandex.practicum.grpc.telemetry.event.MotionSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.MotionSensorAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventTypeAvro;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class MotionSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(getInstant(sensorEvent.getTimestamp()))
                 .setPayload(getMotionSensorAvro(sensorEvent.getMotionSensor()))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.MOTION_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.MOTION_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
@@ -45,7 +46,7 @@ public class MotionSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(getMotionSensorAvro((MotionSensorEvent) sensorEvent))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.MOTION_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.MOTION_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }

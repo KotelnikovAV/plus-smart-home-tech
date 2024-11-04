@@ -33,7 +33,6 @@ public class SnapshotConsumerImpl implements SnapshotConsumer {
 
                 for (ConsumerRecord<Void, SensorsSnapshotAvro> record : records) {
                     analyzerSnapshotService.handleSnapshot(record.value());
-
                 }
 
                 consumer.commitAsync();
@@ -42,5 +41,4 @@ public class SnapshotConsumerImpl implements SnapshotConsumer {
 
         }
     }
-
 }

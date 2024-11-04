@@ -10,6 +10,7 @@ import ru.yandex.practicum.grpc.telemetry.event.DeviceRemovedEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceRemovedEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.HubsEventTypeAvro;
 
 @Component
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class DeviceRemovedEventHandler extends HubEventHandler {
 
     @Override
     public HubEventProto.PayloadCase getMessageTypeRPC() {
-        return HubEventProto.PayloadCase.DEVICE_REMOVED;
+        return HubEventProto.PayloadCase.DEVICE_REMOVED_EVENT;
     }
 
     @Override
@@ -31,7 +32,8 @@ public class DeviceRemovedEventHandler extends HubEventHandler {
         HubEventAvro message = HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(getInstant(hubEvent.getTimestamp()))
-                .setPayload(getDeviceRemovedEvent(hubEvent.getDeviceRemoved()))
+                .setPayload(getDeviceRemovedEvent(hubEvent.getDeviceRemovedEvent()))
+                .setType(HubsEventTypeAvro.DEVICE_REMOVED_EVENT)
                 .build();
         eventsService.collectHubEvent(message);
     }
@@ -42,6 +44,7 @@ public class DeviceRemovedEventHandler extends HubEventHandler {
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(hubEvent.getTimestamp())
                 .setPayload(getDeviceRemovedEvent((DeviceRemovedEvent) hubEvent))
+                .setType(HubsEventTypeAvro.DEVICE_REMOVED_EVENT)
                 .build();
         eventsService.collectHubEvent(message);
     }

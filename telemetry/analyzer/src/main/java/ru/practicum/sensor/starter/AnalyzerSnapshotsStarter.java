@@ -11,7 +11,7 @@ import ru.practicum.sensor.consumer.SnapshotConsumer;
 public class AnalyzerSnapshotsStarter {
     private final SnapshotConsumer snapshotConsumer;
 
-    public void run() {
+    public void start() {
         log.info("Starting aggregator consumer service");
         snapshotConsumer.consumeSnapshotsEvents();
     }

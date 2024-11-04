@@ -9,6 +9,7 @@ import ru.practicum.events.service.EventsService;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.TemperatureSensorProto;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventTypeAvro;
 import ru.yandex.practicum.kafka.telemetry.event.TemperatureSensorAvro;
 
 @Component
@@ -33,7 +34,7 @@ public class TemperatureSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(getInstant(sensorEvent.getTimestamp()))
                 .setPayload(getTemperatureSensorAvro(sensorEvent.getTemperatureSensor()))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.TEMPERATURE_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.TEMPERATURE_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
@@ -45,7 +46,7 @@ public class TemperatureSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(getTemperatureSensorAvro((TemperatureSensorEvent) sensorEvent))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.TEMPERATURE_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.TEMPERATURE_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }

@@ -10,6 +10,7 @@ import ru.yandex.practicum.grpc.telemetry.event.LightSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.LightSensorAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventTypeAvro;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class LightSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(getInstant(sensorEvent.getTimestamp()))
                 .setPayload(getLightSensorAvro(sensorEvent.getLightSensor()))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.LIGHT_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.LIGHT_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
@@ -45,7 +46,7 @@ public class LightSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(getLightSensorAvro((LightSensorEvent) sensorEvent))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.LIGHT_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.LIGHT_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }

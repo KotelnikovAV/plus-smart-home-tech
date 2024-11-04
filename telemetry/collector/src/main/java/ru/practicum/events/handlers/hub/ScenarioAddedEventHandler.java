@@ -24,7 +24,7 @@ public class ScenarioAddedEventHandler extends HubEventHandler {
 
     @Override
     public HubEventProto.PayloadCase getMessageTypeRPC() {
-        return HubEventProto.PayloadCase.SCENARIO_ADDED;
+        return HubEventProto.PayloadCase.SCENARIO_ADDED_EVENT;
     }
 
     @Override
@@ -37,7 +37,8 @@ public class ScenarioAddedEventHandler extends HubEventHandler {
         HubEventAvro message = HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(getInstant(hubEvent.getTimestamp()))
-                .setPayload(getScenarioAddedEvent(hubEvent.getScenarioAdded()))
+                .setPayload(getScenarioAddedEvent(hubEvent.getScenarioAddedEvent()))
+                .setType(HubsEventTypeAvro.SCENARIO_ADDED_EVENT)
                 .build();
         eventsService.collectHubEvent(message);
     }
@@ -48,6 +49,7 @@ public class ScenarioAddedEventHandler extends HubEventHandler {
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(hubEvent.getTimestamp())
                 .setPayload(getScenarioAddedEvent((ScenarioAddedEvent) hubEvent))
+                .setType(HubsEventTypeAvro.SCENARIO_ADDED_EVENT)
                 .build();
         eventsService.collectHubEvent(message);
     }

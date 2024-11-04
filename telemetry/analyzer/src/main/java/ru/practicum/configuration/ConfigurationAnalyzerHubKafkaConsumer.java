@@ -8,7 +8,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.VoidDeserializer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 
 import java.time.Duration;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class ConfigurationAnalyzerHubKafkaConsumer {
     private Map<String, String> topics;
     private long consumeAttemptTimeout;
 
-    public Consumer<Void, SensorEventAvro> getConsumer() {
+    public Consumer<Void, HubEventAvro> getConsumer() {
        return new KafkaConsumer<>(getPropertiesForKafkaConsumer());
     }
 

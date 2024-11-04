@@ -11,6 +11,7 @@ import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.HubsEventTypeAvro;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class DeviceAddedEventHandler extends HubEventHandler {
 
     @Override
     public HubEventProto.PayloadCase getMessageTypeRPC() {
-        return HubEventProto.PayloadCase.DEVICE_ADDED;
+        return HubEventProto.PayloadCase.DEVICE_ADDED_EVENT;
     }
 
     @Override
@@ -32,7 +33,8 @@ public class DeviceAddedEventHandler extends HubEventHandler {
         HubEventAvro message = HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(getInstant(hubEvent.getTimestamp()))
-                .setPayload(getDeviceAddedEvent(hubEvent.getDeviceAdded()))
+                .setPayload(getDeviceAddedEvent(hubEvent.getDeviceAddedEvent()))
+                .setType(HubsEventTypeAvro.DEVICE_ADDED_EVENT)
                 .build();
         eventsService.collectHubEvent(message);
     }
@@ -43,6 +45,7 @@ public class DeviceAddedEventHandler extends HubEventHandler {
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(hubEvent.getTimestamp())
                 .setPayload(getDeviceAddedEvent((DeviceAddedEvent) hubEvent))
+                .setType(HubsEventTypeAvro.DEVICE_ADDED_EVENT)
                 .build();
         eventsService.collectHubEvent(message);
     }

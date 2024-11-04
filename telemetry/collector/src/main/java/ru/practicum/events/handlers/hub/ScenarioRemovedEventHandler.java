@@ -9,6 +9,7 @@ import ru.practicum.events.service.EventsService;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.ScenarioRemovedEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.HubsEventTypeAvro;
 import ru.yandex.practicum.kafka.telemetry.event.ScenarioRemovedEventAvro;
 
 @Component
@@ -18,7 +19,7 @@ public class ScenarioRemovedEventHandler extends HubEventHandler {
 
     @Override
     public HubEventProto.PayloadCase getMessageTypeRPC() {
-        return HubEventProto.PayloadCase.SCENARIO_REMOVED;
+        return HubEventProto.PayloadCase.SCENARIO_REMOVED_EVENT;
     }
 
     @Override
@@ -31,7 +32,8 @@ public class ScenarioRemovedEventHandler extends HubEventHandler {
         HubEventAvro message = HubEventAvro.newBuilder()
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(getInstant(hubEvent.getTimestamp()))
-                .setPayload(getScenarioRemovedEvent(hubEvent.getScenarioRemoved()))
+                .setPayload(getScenarioRemovedEvent(hubEvent.getScenarioRemovedEvent()))
+                .setType(HubsEventTypeAvro.SCENARIO_REMOVED_EVENT)
                 .build();
         eventsService.collectHubEvent(message);
     }
@@ -42,6 +44,7 @@ public class ScenarioRemovedEventHandler extends HubEventHandler {
                 .setHubId(hubEvent.getHubId())
                 .setTimestamp(hubEvent.getTimestamp())
                 .setPayload(getScenarioRemovedEvent((ScenarioRemovedEvent) hubEvent))
+                .setType(HubsEventTypeAvro.SCENARIO_REMOVED_EVENT)
                 .build();
         eventsService.collectHubEvent(message);
     }

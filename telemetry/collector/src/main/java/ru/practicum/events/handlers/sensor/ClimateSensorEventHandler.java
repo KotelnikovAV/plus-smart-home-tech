@@ -10,6 +10,7 @@ import ru.yandex.practicum.grpc.telemetry.event.ClimateSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.ClimateSensorAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventTypeAvro;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class ClimateSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(getInstant(sensorEvent.getTimestamp()))
                 .setPayload(getClimateSensorAvro(sensorEvent.getClimateSensor()))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.CLIMATE_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.CLIMATE_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
@@ -45,7 +46,7 @@ public class ClimateSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(getClimateSensorAvro((ClimateSensorEvent) sensorEvent))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.CLIMATE_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.CLIMATE_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
