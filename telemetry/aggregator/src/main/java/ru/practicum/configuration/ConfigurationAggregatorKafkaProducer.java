@@ -14,7 +14,7 @@ import java.util.Properties;
 @Getter
 @Setter
 @NoArgsConstructor
-@ConfigurationProperties("collector.kafka.producer")
+@ConfigurationProperties("aggregator.kafka.producer")
 public class ConfigurationAggregatorKafkaProducer {
     private Map<String, String> properties;
     private Map<String, String> topics;

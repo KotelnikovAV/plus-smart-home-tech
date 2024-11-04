@@ -12,10 +12,10 @@ message HubEventProto {
   string hub_id = 1;
   google.protobuf.Timestamp timestamp = 2;
   oneof payload {
-    DeviceAddedEventProto device_added = 3;
-    DeviceRemovedEventProto device_removed = 4;
-    ScenarioAddedEventProto scenario_added = 5;
-    ScenarioRemovedEventProto scenario_removed = 6;
+    DeviceAddedEventProto device_added_event = 3;
+    DeviceRemovedEventProto device_removed_event = 4;
+    ScenarioAddedEventProto scenario_added_event = 5;
+    ScenarioRemovedEventProto scenario_removed_event = 6;
   }
 }
 
@@ -56,7 +56,6 @@ message ScenarioConditionProto {
   ConditionTypeProto type = 2;
   ConditionOperationProto operation = 3;
   oneof value {
-    bool bool_value = 4;
     int32 int_value = 5;
     google.protobuf.NullValue null = 6;
   }
@@ -83,4 +82,11 @@ message ScenarioAddedEventProto {
 
 message ScenarioRemovedEventProto {
   string name = 1;
+}
+
+message DeviceActionRequest {
+  string hub_id = 1;
+  string scenario_name = 2;
+  DeviceActionProto action = 3;
+  google.protobuf.Timestamp timestamp = 4;
 }

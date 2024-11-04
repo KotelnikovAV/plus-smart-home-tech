@@ -1,0 +1,57 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  sql:
+    init:
+      mode: always
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/analyzer
+    username: analyzer
+    password: analyzer
+
+logging:
+  level:
+    "org.springframework.orm.jpa": INFO
+    "org.springframework.transaction": INFO
+    "org.springframework.transaction.interceptor": TRACE
+    "org.springframework.orm.jpa.JpaTransactionManager": DEBUG
+
+analyzer:
+  kafka:
+    consumer:
+      hub:
+        properties:
+          "bootstrap.servers": localhost:9092
+          "client.id": Consumer-1
+          "group.id": some.group.1
+          "fetch.min.bytes": 200
+          "fetch.max.wait.ms": 10000
+          "value.deserializer": deserializer.SensorEventDeserializer
+        topics:
+          hubs_events: telemetry.hubs.v1
+        consumeAttemptTimeout: 20000
+      sensor:
+        properties:
+          "bootstrap.servers": localhost:9092
+          "client.id": Consumer-2
+          "group.id": some.group.2
+          "value.deserializer": deserializer.SensorSnapshotsDeserializer
+          "max.poll.records": 100
+          "enable.auto.commit": false
+        topics:
+          snapshots: telemetry.snapshots.v1
+        consumeAttemptTimeout: 1000
+
+grpc:
+  client:
+    hub-router:
+      address: 'static://localhost:59090'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext

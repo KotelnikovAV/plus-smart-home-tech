@@ -9,6 +9,7 @@ import ru.practicum.events.service.EventsService;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SwitchSensorProto;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.SensorEventTypeAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SwitchSensorAvro;
 
 @Component
@@ -33,7 +34,7 @@ public class SwitchSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(getInstant(sensorEvent.getTimestamp()))
                 .setPayload(getSwitchSensorAvro(sensorEvent.getSwitchSensor()))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.SWITCH_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.SWITCH_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
@@ -45,7 +46,7 @@ public class SwitchSensorEventHandler extends SensorEventHandler {
                 .setId(sensorEvent.getId())
                 .setTimestamp(sensorEvent.getTimestamp())
                 .setPayload(getSwitchSensorAvro((SwitchSensorEvent) sensorEvent))
-                .setType(ru.yandex.practicum.kafka.telemetry.event.SensorEventType.SWITCH_SENSOR_EVENT)
+                .setType(SensorEventTypeAvro.SWITCH_SENSOR_EVENT)
                 .build();
         eventsService.collectSensorEvent(message);
     }
