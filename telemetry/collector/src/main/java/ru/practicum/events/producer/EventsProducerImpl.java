@@ -1,4 +1,4 @@
-package ru.practicum.events.service;
+package ru.practicum.events.producer;
 
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -6,16 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.practicum.configuration.ConfigurationCollectorKafkaProducer;
 import ru.practicum.events.utility.ProducerActivityTimer;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
 
-@Service
+@Component
 @RequiredArgsConstructor
 @Slf4j
-public class EventsServiceImpl implements EventsService {
+public class EventsProducerImpl implements EventsProducer {
     private final Object monitor = new Object();
 
     private final ConfigurationCollectorKafkaProducer configurationCollectorKafkaProducer;

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.events.model.sensor.SensorEvent;
 import ru.practicum.events.model.sensor.SwitchSensorEvent;
 import ru.practicum.events.model.sensor.enums.SensorEventType;
-import ru.practicum.events.service.EventsService;
+import ru.practicum.events.producer.EventsProducer;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.SwitchSensorProto;
 import ru.yandex.practicum.kafka.telemetry.event.SensorEventAvro;
@@ -15,7 +15,7 @@ import ru.yandex.practicum.kafka.telemetry.event.SwitchSensorAvro;
 @Component
 @RequiredArgsConstructor
 public class SwitchSensorEventHandler extends SensorEventHandler {
-    private final EventsService eventsService;
+    private final EventsProducer eventsProducer;
 
     @Override
     public SensorEventProto.PayloadCase getMessageTypeRPC() {
@@ -36,7 +36,7 @@ public class SwitchSensorEventHandler extends SensorEventHandler {
                 .setPayload(getSwitchSensorAvro(sensorEvent.getSwitchSensor()))
                 .setType(SensorEventTypeAvro.SWITCH_SENSOR_EVENT)
                 .build();
-        eventsService.collectSensorEvent(message);
+        eventsProducer.collectSensorEvent(message);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class SwitchSensorEventHandler extends SensorEventHandler {
                 .setPayload(getSwitchSensorAvro((SwitchSensorEvent) sensorEvent))
                 .setType(SensorEventTypeAvro.SWITCH_SENSOR_EVENT)
                 .build();
-        eventsService.collectSensorEvent(message);
+        eventsProducer.collectSensorEvent(message);
     }
 
     private SwitchSensorAvro getSwitchSensorAvro(SwitchSensorProto switchSensorProto) {

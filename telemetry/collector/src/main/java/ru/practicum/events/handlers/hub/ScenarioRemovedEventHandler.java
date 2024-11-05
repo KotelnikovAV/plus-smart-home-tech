@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.events.model.hub.HubEvent;
 import ru.practicum.events.model.hub.ScenarioRemovedEvent;
 import ru.practicum.events.model.hub.enums.HubsEventType;
-import ru.practicum.events.service.EventsService;
+import ru.practicum.events.producer.EventsProducer;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.ScenarioRemovedEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
@@ -15,7 +15,7 @@ import ru.yandex.practicum.kafka.telemetry.event.ScenarioRemovedEventAvro;
 @Component
 @RequiredArgsConstructor
 public class ScenarioRemovedEventHandler extends HubEventHandler {
-    private final EventsService eventsService;
+    private final EventsProducer eventsProducer;
 
     @Override
     public HubEventProto.PayloadCase getMessageTypeRPC() {
@@ -35,7 +35,7 @@ public class ScenarioRemovedEventHandler extends HubEventHandler {
                 .setPayload(getScenarioRemovedEvent(hubEvent.getScenarioRemovedEvent()))
                 .setType(HubsEventTypeAvro.SCENARIO_REMOVED_EVENT)
                 .build();
-        eventsService.collectHubEvent(message);
+        eventsProducer.collectHubEvent(message);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ScenarioRemovedEventHandler extends HubEventHandler {
                 .setPayload(getScenarioRemovedEvent((ScenarioRemovedEvent) hubEvent))
                 .setType(HubsEventTypeAvro.SCENARIO_REMOVED_EVENT)
                 .build();
-        eventsService.collectHubEvent(message);
+        eventsProducer.collectHubEvent(message);
     }
 
     private ScenarioRemovedEventAvro getScenarioRemovedEvent(ScenarioRemovedEventProto scenarioRemovedEventProto) {

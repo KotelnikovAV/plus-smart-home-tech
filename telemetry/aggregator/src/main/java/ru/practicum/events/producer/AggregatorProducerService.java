@@ -1,4 +1,4 @@
-package ru.practicum.events.service.producer;
+package ru.practicum.events.producer;
 
 import ru.yandex.practicum.kafka.telemetry.event.SensorsSnapshotAvro;
 

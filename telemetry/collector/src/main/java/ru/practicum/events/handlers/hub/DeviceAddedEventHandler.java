@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.events.model.hub.DeviceAddedEvent;
 import ru.practicum.events.model.hub.HubEvent;
 import ru.practicum.events.model.hub.enums.HubsEventType;
-import ru.practicum.events.service.EventsService;
+import ru.practicum.events.producer.EventsProducer;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceAddedEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEventAvro;
@@ -16,7 +16,7 @@ import ru.yandex.practicum.kafka.telemetry.event.HubsEventTypeAvro;
 @Component
 @RequiredArgsConstructor
 public class DeviceAddedEventHandler extends HubEventHandler {
-    private final EventsService eventsService;
+    private final EventsProducer eventsProducer;
 
     @Override
     public HubEventProto.PayloadCase getMessageTypeRPC() {
@@ -36,7 +36,7 @@ public class DeviceAddedEventHandler extends HubEventHandler {
                 .setPayload(getDeviceAddedEvent(hubEvent.getDeviceAddedEvent()))
                 .setType(HubsEventTypeAvro.DEVICE_ADDED_EVENT)
                 .build();
-        eventsService.collectHubEvent(message);
+        eventsProducer.collectHubEvent(message);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class DeviceAddedEventHandler extends HubEventHandler {
                 .setPayload(getDeviceAddedEvent((DeviceAddedEvent) hubEvent))
                 .setType(HubsEventTypeAvro.DEVICE_ADDED_EVENT)
                 .build();
-        eventsService.collectHubEvent(message);
+        eventsProducer.collectHubEvent(message);
     }
 
     private DeviceAddedEventAvro getDeviceAddedEvent(DeviceAddedEventProto deviceAddedEventProto) {

@@ -22,8 +22,8 @@ public class SwitchSensorHandler extends SnapshotHandler {
     public boolean handle(Condition condition, SensorStateAvro sensorStateAvro) {
         log.info("Handling switch sensor event");
 
-        SwitchSensorAvro motionSensorAvro = (SwitchSensorAvro) sensorStateAvro.getData();
-        if (motionSensorAvro.getState()) {
+        SwitchSensorAvro switchSensorAvro = (SwitchSensorAvro) sensorStateAvro.getData();
+        if (switchSensorAvro.getState()) {
             return checkCondition(condition, 1);
         } else {
             return checkCondition(condition, 0);

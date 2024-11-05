@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.events.model.sensor.MotionSensorEvent;
 import ru.practicum.events.model.sensor.SensorEvent;
 import ru.practicum.events.model.sensor.enums.SensorEventType;
-import ru.practicum.events.service.EventsService;
+import ru.practicum.events.producer.EventsProducer;
 import ru.yandex.practicum.grpc.telemetry.event.MotionSensorProto;
 import ru.yandex.practicum.grpc.telemetry.event.SensorEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.MotionSensorAvro;
@@ -15,7 +15,7 @@ import ru.yandex.practicum.kafka.telemetry.event.SensorEventTypeAvro;
 @Component
 @RequiredArgsConstructor
 public class MotionSensorEventHandler extends SensorEventHandler {
-    private final EventsService eventsService;
+    private final EventsProducer eventsProducer;
 
     @Override
     public SensorEventProto.PayloadCase getMessageTypeRPC() {
@@ -36,7 +36,7 @@ public class MotionSensorEventHandler extends SensorEventHandler {
                 .setPayload(getMotionSensorAvro(sensorEvent.getMotionSensor()))
                 .setType(SensorEventTypeAvro.MOTION_SENSOR_EVENT)
                 .build();
-        eventsService.collectSensorEvent(message);
+        eventsProducer.collectSensorEvent(message);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class MotionSensorEventHandler extends SensorEventHandler {
                 .setPayload(getMotionSensorAvro((MotionSensorEvent) sensorEvent))
                 .setType(SensorEventTypeAvro.MOTION_SENSOR_EVENT)
                 .build();
-        eventsService.collectSensorEvent(message);
+        eventsProducer.collectSensorEvent(message);
     }
 
     private MotionSensorAvro getMotionSensorAvro(MotionSensorProto motionSensorProto) {

@@ -1,4 +1,4 @@
-package ru.practicum.events.service.consumer;
+package ru.practicum.events.consumer;
 
 public interface AggregatorConsumerService {
     void consumeSensorEvents();

@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import ru.practicum.sensor.model.Sensor;
 import ru.practicum.sensor.repository.SensorRepository;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceAddedEventAvro;
+import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
 import ru.yandex.practicum.kafka.telemetry.event.HubEventAvro;
 import ru.yandex.practicum.kafka.telemetry.event.HubsEventTypeAvro;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEventTypeAvro;
 
 @Component
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class DeviceAddedEventHandler implements HubEventHandler {
         Sensor sensor = new Sensor();
 
         sensor.setId(deviceAddedEventAvro.getId());
-        sensor.setType(SensorEventTypeAvro.valueOf(deviceAddedEventAvro.getType().toString()));
+        sensor.setType(DeviceTypeAvro.valueOf(deviceAddedEventAvro.getType().toString()));
         sensor.setHubId(hubEvent.getHubId());
 
         sensorRepository.save(sensor);

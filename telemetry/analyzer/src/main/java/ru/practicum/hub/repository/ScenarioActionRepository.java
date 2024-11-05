@@ -13,7 +13,7 @@ public interface ScenarioActionRepository extends JpaRepository<ScenarioAction, 
     @Query("select sa " +
             "from ScenarioAction as sa " +
             "join sa.id.action as a " +
-            "join sa.id.sensor as s " +
+            "join sa.id.scenario as s " +
             "where sa.id.scenario.id = :scenario_id ")
     List<ScenarioAction> findByScenarioId(@Param("scenario_id") Long scenarioId);
 }

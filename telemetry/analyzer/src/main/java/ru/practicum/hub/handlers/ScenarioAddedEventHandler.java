@@ -35,13 +35,12 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
     @Override
     public void handle(HubEventAvro hubEvent) {
         log.info("Received scenario added event: {}", hubEvent);
-
-        Scenario scenario = saveScenario(hubEvent);
         ScenarioAddedEventAvro scenarioAddedEventAvro = (ScenarioAddedEventAvro) hubEvent.getPayload();
         List<ScenarioConditionAvro> scenarioConditionsAvro = scenarioAddedEventAvro.getConditions();
         List<DeviceActionAvro> deviceActionsAvro = scenarioAddedEventAvro.getActions();
 
         checkSensors(scenarioConditionsAvro);
+        Scenario scenario = saveScenario(hubEvent.getHubId(), scenarioAddedEventAvro);
         List<Condition> conditions = saveCondition(scenarioConditionsAvro);
         List<Action> actions = saveAction(deviceActionsAvro);
         saveScenarioConditions(scenario, conditions);
@@ -71,12 +70,12 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
         return conditions;
     }
 
-    private Scenario saveScenario(HubEventAvro hubEvent) {
-        log.info("Saving scenario: {}", hubEvent);
+    private Scenario saveScenario(String hubId, ScenarioAddedEventAvro scenarioAddedEventAvro) {
+        log.info("Saving scenario: {}", scenarioAddedEventAvro);
 
         Scenario scenario = new Scenario();
-        scenario.setHubId(hubEvent.getHubId());
-        scenario.setName(((ScenarioAddedEventAvro) hubEvent.getPayload()).getName());
+        scenario.setHubId(hubId);
+        scenario.setName(scenarioAddedEventAvro.getName());
         scenario = scenarioRepository.save(scenario);
 
         log.info("Saved scenario: {}", scenario);
@@ -87,6 +86,9 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
         log.info("Saving actions: {}", deviceActionsAvro);
 
         List<Action> actions = actionMapper.actionAvroListToActionList(deviceActionsAvro);
+        actions = actions.stream()
+                .peek(action -> action.setSensor(sensorRepository.findById(action.getSensor().getId()).get()))
+                .toList();
         actions = actionRepository.saveAll(actions);
 
         log.info("Saved actions: {}", actions);
@@ -112,10 +114,7 @@ public class ScenarioAddedEventHandler implements HubEventHandler {
 
         List<ScenarioActionId> scenarioActionsId = new ArrayList<>();
 
-        actions.forEach(action ->  scenarioActionsId
-                .add(new ScenarioActionId(scenario,
-                        sensorRepository.findById(action.getSensor().getId()).get(),
-                        action)));
+        actions.forEach(action ->  scenarioActionsId.add(new ScenarioActionId(scenario, action)));
 
         List<ScenarioAction> scenarioActions = scenarioActionsId.stream()
                 .map(ScenarioAction::new)

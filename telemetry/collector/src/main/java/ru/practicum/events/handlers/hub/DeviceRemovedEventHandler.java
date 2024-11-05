@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.events.model.hub.DeviceRemovedEvent;
 import ru.practicum.events.model.hub.HubEvent;
 import ru.practicum.events.model.hub.enums.HubsEventType;
-import ru.practicum.events.service.EventsService;
+import ru.practicum.events.producer.EventsProducer;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceRemovedEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.kafka.telemetry.event.DeviceRemovedEventAvro;
@@ -15,7 +15,7 @@ import ru.yandex.practicum.kafka.telemetry.event.HubsEventTypeAvro;
 @Component
 @RequiredArgsConstructor
 public class DeviceRemovedEventHandler extends HubEventHandler {
-    private final EventsService eventsService;
+    private final EventsProducer eventsProducer;
 
     @Override
     public HubEventProto.PayloadCase getMessageTypeRPC() {
@@ -35,7 +35,7 @@ public class DeviceRemovedEventHandler extends HubEventHandler {
                 .setPayload(getDeviceRemovedEvent(hubEvent.getDeviceRemovedEvent()))
                 .setType(HubsEventTypeAvro.DEVICE_REMOVED_EVENT)
                 .build();
-        eventsService.collectHubEvent(message);
+        eventsProducer.collectHubEvent(message);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class DeviceRemovedEventHandler extends HubEventHandler {
                 .setPayload(getDeviceRemovedEvent((DeviceRemovedEvent) hubEvent))
                 .setType(HubsEventTypeAvro.DEVICE_REMOVED_EVENT)
                 .build();
-        eventsService.collectHubEvent(message);
+        eventsProducer.collectHubEvent(message);
     }
 
     private DeviceRemovedEventAvro getDeviceRemovedEvent(DeviceRemovedEventProto deviceRemovedEventProto) {

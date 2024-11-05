@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import ru.yandex.practicum.kafka.telemetry.event.SensorEventTypeAvro;
+import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
 
 @Entity
 @Table(name = "sensors")
@@ -25,5 +25,5 @@ public class Sensor {
     @NotNull
     @Column
     @Enumerated(value = EnumType.STRING)
-    SensorEventTypeAvro type;
+    DeviceTypeAvro type;
 }

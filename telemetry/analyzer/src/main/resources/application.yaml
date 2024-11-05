@@ -32,7 +32,7 @@ analyzer:
           "group.id": some.group.1
           "fetch.min.bytes": 200
           "fetch.max.wait.ms": 10000
-          "value.deserializer": deserializer.SensorEventDeserializer
+          "value.deserializer": deserializer.HubEventDeserializer
         topics:
           hubs_events: telemetry.hubs.v1
         consumeAttemptTimeout: 20000
@@ -43,6 +43,8 @@ analyzer:
           "group.id": some.group.2
           "value.deserializer": deserializer.SensorSnapshotsDeserializer
           "max.poll.records": 100
+          "fetch.min.bytes": 500
+          "fetch.max.wait.ms": 500
           "enable.auto.commit": false
         topics:
           snapshots: telemetry.snapshots.v1

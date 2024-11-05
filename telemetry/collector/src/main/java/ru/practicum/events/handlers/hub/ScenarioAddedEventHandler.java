@@ -7,7 +7,7 @@ import ru.practicum.events.model.hub.HubEvent;
 import ru.practicum.events.model.hub.ScenarioAddedEvent;
 import ru.practicum.events.model.hub.ScenarioCondition;
 import ru.practicum.events.model.hub.enums.HubsEventType;
-import ru.practicum.events.service.EventsService;
+import ru.practicum.events.producer.EventsProducer;
 import ru.yandex.practicum.grpc.telemetry.event.DeviceActionProto;
 import ru.yandex.practicum.grpc.telemetry.event.HubEventProto;
 import ru.yandex.practicum.grpc.telemetry.event.ScenarioAddedEventProto;
@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class ScenarioAddedEventHandler extends HubEventHandler {
-    private final EventsService eventsService;
+    private final EventsProducer eventsProducer;
 
     @Override
     public HubEventProto.PayloadCase getMessageTypeRPC() {
@@ -40,7 +40,7 @@ public class ScenarioAddedEventHandler extends HubEventHandler {
                 .setPayload(getScenarioAddedEvent(hubEvent.getScenarioAddedEvent()))
                 .setType(HubsEventTypeAvro.SCENARIO_ADDED_EVENT)
                 .build();
-        eventsService.collectHubEvent(message);
+        eventsProducer.collectHubEvent(message);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ScenarioAddedEventHandler extends HubEventHandler {
                 .setPayload(getScenarioAddedEvent((ScenarioAddedEvent) hubEvent))
                 .setType(HubsEventTypeAvro.SCENARIO_ADDED_EVENT)
                 .build();
-        eventsService.collectHubEvent(message);
+        eventsProducer.collectHubEvent(message);
     }
 
     private ScenarioAddedEventAvro getScenarioAddedEvent(ScenarioAddedEventProto scenarioAddedEventProto) {

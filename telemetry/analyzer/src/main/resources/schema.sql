@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS scenario_conditions (
 
 CREATE TABLE IF NOT EXISTS scenario_actions (
     scenario_id BIGINT  REFERENCES scenarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    sensor_id VARCHAR   REFERENCES sensors(id) ON DELETE CASCADE ON UPDATE CASCADE,
     action_id BIGINT    REFERENCES actions(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    PRIMARY KEY (scenario_id, sensor_id, action_id)
+    PRIMARY KEY (scenario_id, action_id)
 );

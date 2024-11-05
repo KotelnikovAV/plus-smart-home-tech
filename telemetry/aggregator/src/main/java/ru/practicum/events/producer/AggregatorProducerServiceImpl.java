@@ -1,4 +1,4 @@
-package ru.practicum.events.service.producer;
+package ru.practicum.events.producer;
 
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;

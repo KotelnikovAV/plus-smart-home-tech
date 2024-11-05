@@ -21,6 +21,7 @@ public class TemperatureSensorHandler extends SnapshotHandler {
     @Override
     public boolean handle(Condition condition, SensorStateAvro sensorStateAvro) {
         log.info("Handling temperature sensor event");
+
         TemperatureSensorAvro temperatureSensorAvro = (TemperatureSensorAvro) sensorStateAvro.getData();
         return checkCondition(condition, temperatureSensorAvro.getTemperatureC());
     }

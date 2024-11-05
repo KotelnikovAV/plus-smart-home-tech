@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.HubRouterClient;
 import ru.practicum.configuration.ConfigurationHandlers;
+import ru.practicum.exception.NotFoundException;
 import ru.practicum.hub.model.Condition;
 import ru.practicum.hub.model.Scenario;
 import ru.practicum.hub.model.ScenarioAction;
@@ -40,15 +41,27 @@ public class AnalyzerSnapshotServiceImpl implements AnalyzerSnapshotService {
         Map<String, SensorStateAvro> sensors = snapshot.getSensorsState();
         List<Scenario> scenarios = conditionalRepository.findScenarios();
 
+        if (scenarios == null || scenarios.isEmpty()) {
+            throw new NotFoundException("No scenarios found");
+        }
+
         for (Scenario scenario : scenarios) {
             boolean checkConditions = true;
-            List<Condition> conditions = conditionalRepository.findConditions(scenario.getId());
-            for (Condition condition : conditions) {
-                SensorStateAvro sensorStateAvro = sensors.get(condition.getSensor().getId());
-                checkConditions = checkConditions && configurationHandlers.getSnapshotHandlers()
-                        .get(sensorStateAvro.getType())
-                        .handle(condition, sensorStateAvro);
+
+            try {
+                List<Condition> conditions = conditionalRepository.findConditions(scenario.getId());
+
+                for (Condition condition : conditions) {
+                    SensorStateAvro sensorStateAvro = sensors.get(condition.getSensor().getId());
+                    checkConditions = checkConditions && configurationHandlers.getSnapshotHandlers()
+                            .get(sensorStateAvro.getType())
+                            .handle(condition, sensorStateAvro);
+                }
+
+            } catch (Exception e) {
+                checkConditions = false;
             }
+
             if (checkConditions) {
                 sendAction(scenario);
             }
@@ -61,15 +74,15 @@ public class AnalyzerSnapshotServiceImpl implements AnalyzerSnapshotService {
                 .map(ScenarioAction::getId)
                 .toList();
 
-        for (ScenarioActionId action : scenarioActions) {
+        for (ScenarioActionId scenarioAction : scenarioActions) {
             Timestamp timestamp = Timestamp.newBuilder()
                     .setNanos(Instant.now().getNano())
                     .setSeconds(Instant.now().getEpochSecond())
                     .build();
             DeviceActionProto deviceActionProto = DeviceActionProto.newBuilder()
-                    .setType(ActionTypeProto.valueOf(action.getAction().getType().toString()))
-                    .setSensorId(action.getSensor().getId())
-                    .setValue(action.getAction().getAmount())
+                    .setType(ActionTypeProto.valueOf(scenarioAction.getAction().getType().toString()))
+                    .setSensorId(scenarioAction.getAction().getSensor().getId())
+                    .setValue(scenarioAction.getAction().getAmount())
                     .build();
 
             DeviceActionRequest deviceActionRequest = DeviceActionRequest.newBuilder()

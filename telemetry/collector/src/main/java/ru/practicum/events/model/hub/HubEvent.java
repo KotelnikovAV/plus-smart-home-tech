@@ -30,7 +30,7 @@ public abstract class HubEvent {
     @NotBlank
     private String hubId;
     @NotNull
-    private Instant timestamp = Instant.now();
+    private Instant timestamp;
 
     @NotNull
     public abstract HubsEventType getType();

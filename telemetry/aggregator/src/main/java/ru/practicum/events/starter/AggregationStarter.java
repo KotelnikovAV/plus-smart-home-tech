@@ -3,7 +3,7 @@ package ru.practicum.events.starter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.practicum.events.service.consumer.AggregatorConsumerService;
+import ru.practicum.events.consumer.AggregatorConsumerService;
 
 @Slf4j
 @Component
