@@ -14,13 +14,13 @@ import lombok.*;
 public class Scenario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @NotBlank
     @Column
-    String hubId;
+    private String hubId;
 
     @NotBlank
     @Column
-    String name;
+    private String name;
 }

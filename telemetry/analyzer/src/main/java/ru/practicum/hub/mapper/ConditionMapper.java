@@ -24,7 +24,5 @@ public abstract class ConditionMapper {
         return null;
     }
 
-    ;
-
     public abstract List<Condition> conditionAvroListToConditionList(List<ScenarioConditionAvro> scenarioConditionAvroList);
 }

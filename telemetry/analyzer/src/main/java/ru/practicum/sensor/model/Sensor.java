@@ -16,14 +16,14 @@ import ru.yandex.practicum.kafka.telemetry.event.DeviceTypeAvro;
 public class Sensor {
     @Id
     @NotBlank
-    String id;
+    private String id;
 
     @NotBlank
     @Column
-    String hubId;
+    private String hubId;
 
     @NotNull
     @Column
     @Enumerated(value = EnumType.STRING)
-    DeviceTypeAvro type;
+    private DeviceTypeAvro type;
 }

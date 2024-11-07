@@ -18,10 +18,10 @@ public class ScenarioActionId implements Serializable {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "scenario_id")
-    Scenario scenario;
+    private Scenario scenario;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "action_id")
-    Action action;
+    private Action action;
 }

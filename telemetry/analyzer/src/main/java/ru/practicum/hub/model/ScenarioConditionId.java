@@ -18,10 +18,10 @@ public class ScenarioConditionId implements Serializable {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "scenario_id")
-    Scenario scenario;
+    private Scenario scenario;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "condition_id")
-    Condition condition;
+    private Condition condition;
 }
