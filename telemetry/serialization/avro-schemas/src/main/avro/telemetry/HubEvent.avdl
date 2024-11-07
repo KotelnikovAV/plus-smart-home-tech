@@ -30,6 +30,13 @@ protocol HubEventProtocol {
 		SET_VALUE
 	}
 
+	enum HubsEventTypeAvro {
+		DEVICE_ADDED_EVENT,
+		DEVICE_REMOVED_EVENT,
+		SCENARIO_ADDED_EVENT,
+		SCENARIO_REMOVED_EVENT
+	}
+
 	record DeviceAddedEventAvro {
 		string id;
 		DeviceTypeAvro type;
@@ -43,7 +50,7 @@ protocol HubEventProtocol {
 		string sensor_id;
 		ConditionTypeAvro type;
 		ConditionOperationAvro operation;
-		boolean? value;
+		int? value;
 	}
 
 	record DeviceActionAvro {
@@ -65,6 +72,7 @@ protocol HubEventProtocol {
 	record HubEventAvro {
 		string hub_id;
 		timestamp_ms timestamp;
+		HubsEventTypeAvro type;
 		union {
 			DeviceAddedEventAvro,
 			DeviceRemovedEventAvro,

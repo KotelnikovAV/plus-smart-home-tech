@@ -30,6 +30,7 @@ protocol SensorEventProtocol {
 		string id;
 		string hubId;
 		timestamp_ms timestamp;
+		SensorEventTypeAvro type;
 		union {
 			ClimateSensorAvro,
 			LightSensorAvro,
@@ -39,7 +40,7 @@ protocol SensorEventProtocol {
 		} payload;
 	}
 
-	enum SensorEventType {
+	enum SensorEventTypeAvro {
 		CLIMATE_SENSOR_EVENT,
 		LIGHT_SENSOR_EVENT,
 		MOTION_SENSOR_EVENT,
