@@ -1,0 +1,23 @@
+aggregator:
+  kafka:
+    producer:
+      properties:
+        "bootstrap.servers": localhost:9092
+        "value.serializer": serializer.EventSerializer
+        "key.serializer": org.apache.kafka.common.serialization.StringSerializer
+        "batch.size": 10000
+        "linger.ms": 2000
+      topics:
+        snapshots: telemetry.snapshots.v1
+      timeUntilClosingMs: 5000
+    consumer:
+      properties:
+        "bootstrap.servers": localhost:9092
+        "client.id": Consumer-1
+        "group.id": some.group.id
+        "value.deserializer": deserializer.SensorEventDeserializer
+        "max.poll.records": 50
+        "enable.auto.commit": false
+      topics:
+        sensors_events: telemetry.sensors.v1
+      consumeAttemptTimeout: 10000

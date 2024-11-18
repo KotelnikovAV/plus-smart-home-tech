@@ -19,6 +19,7 @@
         <module>telemetry</module>
         <module>infra</module>
         <module>commerce</module>
+        <module>infra/config-server</module>
     </modules>
 
     <properties>
@@ -27,6 +28,7 @@
         <avro.version>1.11.4</avro.version>
         <kafka-clients.version>3.6.1</kafka-clients.version>
         <springdoc-openapi-starter.version>2.6.0</springdoc-openapi-starter.version>
+        <spring-cloud-dependencies.version>2023.0.3</spring-cloud-dependencies.version>
         <grpc-spring-boot-starter.version>3.1.0.RELEASE</grpc-spring-boot-starter.version>
         <grpc-client-spring-boot-starter>3.1.0.RELEASE</grpc-client-spring-boot-starter>
         <protobuf.version>4.28.2</protobuf.version>
@@ -69,6 +71,13 @@
                 <groupId>net.devh</groupId>
                 <artifactId>grpc-client-spring-boot-starter</artifactId>
                 <version>${grpc-client-spring-boot-starter}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>io.grpc</groupId>
