@@ -1,9 +1,9 @@
-package ru.practicum.product.dto.mapper;
+package ru.practicum.product.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.product.dto.PageableDto;
-import ru.practicum.product.dto.ProductDto;
-import ru.practicum.product.dto.SortDto;
+import ru.practicum.dto.PageableDto;
+import ru.practicum.dto.ProductDto;
+import ru.practicum.dto.SortDto;
 
 import java.util.ArrayList;
 import java.util.List;

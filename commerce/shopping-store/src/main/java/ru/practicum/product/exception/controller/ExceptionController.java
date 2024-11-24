@@ -33,10 +33,10 @@ public class ExceptionController {
         return ApiError.builder()
                 .cause(e.getCause())
                 .stackTrace(e.getStackTrace())
-                .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString())
+                .httpStatus(HttpStatus.NOT_FOUND.toString())
                 .localizedMessage(e.getLocalizedMessage())
                 .suppressed(e.getSuppressed())
-                .userMessage("INTERNAL_SERVER_ERROR")
+                .userMessage("product not found")
                 .message(e.getMessage())
                 .build();
     }

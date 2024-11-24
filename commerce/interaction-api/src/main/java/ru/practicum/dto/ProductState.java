@@ -1,4 +1,4 @@
-package ru.practicum.product.dto;
+package ru.practicum.dto;
 
 public enum ProductState {
     ACTIVE,

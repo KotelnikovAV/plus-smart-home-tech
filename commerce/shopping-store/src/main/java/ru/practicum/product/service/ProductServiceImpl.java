@@ -8,10 +8,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import ru.practicum.product.dto.*;
-import ru.practicum.product.dto.mapper.PageableDtoMapper;
-import ru.practicum.product.dto.mapper.ProductMapper;
+import ru.practicum.dto.*;
 import ru.practicum.product.exception.NotFoundException;
+import ru.practicum.product.mapper.PageableDtoMapper;
+import ru.practicum.product.mapper.ProductMapper;
 import ru.practicum.product.model.Product;
 import ru.practicum.product.repository.ProductRepository;
 

@@ -1,9 +1,9 @@
 package ru.practicum.product.service;
 
-import ru.practicum.product.dto.PageableDto;
-import ru.practicum.product.dto.ProductCategory;
-import ru.practicum.product.dto.ProductDto;
-import ru.practicum.product.dto.QuantityState;
+import ru.practicum.dto.PageableDto;
+import ru.practicum.dto.ProductCategory;
+import ru.practicum.dto.ProductDto;
+import ru.practicum.dto.QuantityState;
 
 import java.util.List;
 

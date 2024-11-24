@@ -2,9 +2,9 @@ package ru.practicum.product.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.practicum.product.dto.ProductCategory;
-import ru.practicum.product.dto.ProductState;
-import ru.practicum.product.dto.QuantityState;
+import ru.practicum.dto.ProductCategory;
+import ru.practicum.dto.ProductState;
+import ru.practicum.dto.QuantityState;
 
 @Entity
 @Table(name = "products")

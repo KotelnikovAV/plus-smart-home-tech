@@ -1,7 +1,7 @@
 drop table if exists products;
 
 CREATE TABLE IF NOT EXISTS products (
-    product_id          BIGINT            GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    product_id          BIGINT             generated always as identity primary key,
     product_name        VARCHAR            NOT NULL,
     description         VARCHAR            NOT NULL,
     image_src           VARCHAR            NOT NULL,
