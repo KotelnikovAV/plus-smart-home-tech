@@ -1,14 +1,14 @@
-package ru.practicum.controller;
+package ru.practicum.cart.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.cart.service.ShoppingCartService;
 import ru.practicum.client.ShoppingCartClient;
 import ru.practicum.dto.BookedProductsDto;
 import ru.practicum.dto.ChangeProductQuantityRequestDto;
 import ru.practicum.dto.ShoppingCartDto;
-import ru.practicum.service.ShoppingCartService;
 
 import java.util.List;
 import java.util.Map;

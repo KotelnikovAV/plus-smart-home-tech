@@ -1,10 +1,10 @@
-package ru.practicum.mapper;
+package ru.practicum.cart.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import ru.practicum.cart.model.ShoppingCart;
 import ru.practicum.dto.ShoppingCartDto;
-import ru.practicum.model.ShoppingCart;
 
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)

@@ -1,4 +1,4 @@
-package ru.practicum.exception;
+package ru.practicum.cart.exception;
 
 public class DataDuplicationException extends RuntimeException {
     public DataDuplicationException(String message) {

@@ -1,4 +1,4 @@
-package ru.practicum.service;
+package ru.practicum.cart.service;
 
 import ru.practicum.dto.BookedProductsDto;
 import ru.practicum.dto.ChangeProductQuantityRequestDto;

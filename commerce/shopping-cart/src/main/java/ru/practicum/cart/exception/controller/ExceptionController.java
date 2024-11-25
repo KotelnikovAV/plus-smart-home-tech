@@ -1,4 +1,4 @@
-package ru.practicum.exception.controller;
+package ru.practicum.cart.exception.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -6,10 +6,10 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.exception.DataDuplicationException;
-import ru.practicum.exception.NoProductsInShoppingCartException;
-import ru.practicum.exception.NotFoundException;
-import ru.practicum.exception.model.ApiError;
+import ru.practicum.cart.exception.DataDuplicationException;
+import ru.practicum.cart.exception.NoProductsInShoppingCartException;
+import ru.practicum.cart.exception.NotFoundException;
+import ru.practicum.cart.exception.model.ApiError;
 
 @RestControllerAdvice
 @Slf4j

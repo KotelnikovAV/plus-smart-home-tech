@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.practicum.dto.*;
+import ru.practicum.fallback.WarehouseFallback;
 
 import java.util.Map;
 
-@FeignClient(name = "warehouse")
+@FeignClient(name = "warehouse", fallback = WarehouseFallback.class)
 public interface WarehouseClient {
     @PutMapping("/api/v1/warehouse")
     NewProductInWarehouseRequestDto saveProduct(@RequestBody @Valid NewProductInWarehouseRequestDto newProduct);

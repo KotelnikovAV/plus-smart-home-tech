@@ -1,19 +1,19 @@
-package ru.practicum.service;
+package ru.practicum.cart.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.cart.exception.DataDuplicationException;
+import ru.practicum.cart.exception.NoProductsInShoppingCartException;
+import ru.practicum.cart.exception.NotFoundException;
+import ru.practicum.cart.mapper.ShoppingCartMapper;
+import ru.practicum.cart.model.ShoppingCart;
+import ru.practicum.cart.repository.ShoppingCartRepository;
 import ru.practicum.client.WarehouseClient;
 import ru.practicum.dto.BookedProductsDto;
 import ru.practicum.dto.ChangeProductQuantityRequestDto;
 import ru.practicum.dto.ShoppingCartDto;
-import ru.practicum.exception.DataDuplicationException;
-import ru.practicum.exception.NoProductsInShoppingCartException;
-import ru.practicum.exception.NotFoundException;
-import ru.practicum.mapper.ShoppingCartMapper;
-import ru.practicum.model.ShoppingCart;
-import ru.practicum.repository.ShoppingCartRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -94,7 +94,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional
     public ShoppingCartDto changeProductQuantity(String userName,
-                                                                 ChangeProductQuantityRequestDto quantity) {
+                                                 ChangeProductQuantityRequestDto quantity) {
         log.info("Changing product quantity for user {}", userName);
 
         ShoppingCart shoppingCart = shoppingCartRepository.findByUserName(userName)

@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.BookedProductsDto;
 import ru.practicum.dto.ChangeProductQuantityRequestDto;
 import ru.practicum.dto.ShoppingCartDto;
+import ru.practicum.fallback.ShoppingCartFallback;
 
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "shopping-cart")
+@FeignClient(name = "shopping-cart", fallback = ShoppingCartFallback.class)
 public interface ShoppingCartClient {
     @GetMapping("/api/v1/shopping-cart")
     ShoppingCartDto findShoppingCart(@RequestParam(required = false) String username,

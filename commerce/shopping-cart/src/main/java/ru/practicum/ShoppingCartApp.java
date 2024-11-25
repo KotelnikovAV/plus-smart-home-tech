@@ -6,7 +6,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-//@EnableCircuitBreaker
 public class ShoppingCartApp {
     public static void main(String[] args) {
         SpringApplication.run(ShoppingCartApp.class, args);

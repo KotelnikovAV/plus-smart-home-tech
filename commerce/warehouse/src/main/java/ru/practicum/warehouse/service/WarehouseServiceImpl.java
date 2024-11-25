@@ -83,6 +83,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         return getBookedProducts(quantityProducts, warehouses);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public BookedProductsDto assembleProducts
             (AssemblyProductForOrderFromShoppingCartRequestDto assemblyProduct) {

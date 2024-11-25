@@ -1,4 +1,4 @@
-package ru.practicum.exception.model;
+package ru.practicum.cart.exception.model;
 
 import lombok.Builder;
 import lombok.Getter;
