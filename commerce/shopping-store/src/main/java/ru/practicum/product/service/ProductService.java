@@ -14,9 +14,9 @@ public interface ProductService {
 
     ProductDto updateProduct(ProductDto productDto);
 
-    Boolean deleteProduct(Long productId);
+    Boolean deleteProduct(String productId);
 
-    Boolean setQuantity(Long productId, QuantityState quantityState);
+    Boolean setQuantity(String productId, QuantityState quantityState);
 
-    ProductDto findProductById(Long productId);
+    ProductDto findProductById(String productId);
 }

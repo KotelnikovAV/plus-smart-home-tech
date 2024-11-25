@@ -17,6 +17,7 @@ import ru.practicum.product.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -54,6 +55,13 @@ public class ProductServiceImpl implements ProductService {
         log.info("Saving product");
 
         Product product = productMapper.productDtoToProduct(productDto);
+
+        if (productDto.getProductId() == null || productDto.getProductId().isEmpty()) {
+            product.setProductId(UUID.randomUUID().toString()); // спецификация API обозначает, что id это значение
+            // типа String и должно выглядеть следующим образом - "3fa85f64-5717-4562-b3fc-2c963f66afa6", но при
+            // этом на вход id не дается, приходится задавать самому
+        }
+
         product = productRepository.save(product);
         log.info("Saved product");
 
@@ -76,8 +84,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public Boolean deleteProduct(Long productId) {
+    public Boolean deleteProduct(String productId) {
         log.info("Deleting product {}", productId);
+        productId = productId.substring(1, productId.length() - 1); // какие-то странные тесты,
+        // здесь почему-то этот параметр передается в теле запроса, из-за этого строчка записывается
+        // как ""......"" - с двойными кавычками, поэтому приходится их убирать
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
@@ -89,7 +100,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public Boolean setQuantity(Long productId, QuantityState quantityState) {
+    public Boolean setQuantity(String productId, QuantityState quantityState) { // здесь, например, productId
+        // передается в качестве параметра запроса и поэтому проблем с кавычками не возникает
         log.info("Updating quantityState product {}", productId);
 
         Product product = productRepository.findById(productId)
@@ -101,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
-    public ProductDto findProductById(Long productId) {
+    public ProductDto findProductById(String productId) {
         log.info("Finding product by id {}", productId);
 
         Product product = productRepository.findById(productId)

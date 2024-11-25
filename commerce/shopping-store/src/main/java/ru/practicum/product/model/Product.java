@@ -15,8 +15,7 @@ import ru.practicum.dto.QuantityState;
 @AllArgsConstructor
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private String productId;
 
     @Column
     private String productName;

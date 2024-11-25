@@ -11,7 +11,7 @@ public interface WarehouseService {
 
     BookedProductsDto bookingProducts(ShoppingCartDto shoppingCartDto);
 
-    AssemblyProductForOrderFromShoppingCartRequestDto assembleProducts(AssemblyProductForOrderFromShoppingCartRequestDto
+    BookedProductsDto assembleProducts(AssemblyProductForOrderFromShoppingCartRequestDto
                                                                                assemblyProduct);
 
     AddProductToWarehouseRequestDto addProduct(AddProductToWarehouseRequestDto addProductToWarehouseRequestDto);

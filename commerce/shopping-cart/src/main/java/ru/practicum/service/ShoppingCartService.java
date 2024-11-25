@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ShoppingCartService {
-    ShoppingCartDto findShoppingCart(String userName);
+    ShoppingCartDto findShoppingCart(String userName, String shoppingCartId);
 
     ShoppingCartDto saveShoppingCart(String userName, Map<String, Integer> products);
 

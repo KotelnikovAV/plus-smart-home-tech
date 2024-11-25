@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.client.ShoppingCartClient;
 import ru.practicum.dto.*;
 import ru.practicum.warehouse.exception.NoSpecifiedProductInWarehouseException;
 import ru.practicum.warehouse.exception.NotFoundException;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
     private final WarehouseMapper warehouseMapper;
+    private final ShoppingCartClient shoppingCartClient;
 
     @Transactional
     @Override
@@ -82,8 +84,18 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public AssemblyProductForOrderFromShoppingCartRequestDto assembleProducts(AssemblyProductForOrderFromShoppingCartRequestDto assemblyProduct) {
-        return null;
+    public BookedProductsDto assembleProducts
+            (AssemblyProductForOrderFromShoppingCartRequestDto assemblyProduct) {
+        log.info("Assembly products");
+
+        ShoppingCartDto shoppingCartDto = shoppingCartClient
+                .findShoppingCart(null, assemblyProduct.getShoppingCartId());
+
+        Map<String, Integer> quantityProducts = shoppingCartDto.getProducts();
+        Set<String> productIds = quantityProducts.keySet();
+        List<Warehouse> warehouses = warehouseRepository.findAllById(productIds);
+
+        return getBookedProducts(quantityProducts, warehouses);
     }
 
     @Transactional

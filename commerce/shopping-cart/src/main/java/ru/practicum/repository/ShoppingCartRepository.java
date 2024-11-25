@@ -10,5 +10,7 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Stri
 
     Optional<ShoppingCart> findByUserName(String userName);
 
+    Optional<ShoppingCart> findByIdAndUserName(String id, String userName);
+
     void deleteByUserName(String userName);
 }

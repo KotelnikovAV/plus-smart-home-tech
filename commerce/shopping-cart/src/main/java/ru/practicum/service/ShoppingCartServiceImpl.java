@@ -28,11 +28,25 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional(readOnly = true)
-    public ShoppingCartDto findShoppingCart(String userName) {
-        log.info("Find shopping cart by user name: {}", userName);
+    public ShoppingCartDto findShoppingCart(String userName, String shoppingCartId) {
+        log.info("Find shopping cart");
+        ShoppingCart shoppingCart;
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserName(userName)
-                .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
+        if (userName == null && shoppingCartId == null) {
+            throw new NotFoundException("Username and shopping cart id is null");
+        }
+
+        if (userName != null && shoppingCartId != null) {
+            shoppingCart = shoppingCartRepository.findByIdAndUserName(shoppingCartId, userName)
+                    .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
+        } else if (userName != null) {
+            shoppingCart = shoppingCartRepository.findByUserName(userName)
+                    .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
+        } else {
+            shoppingCart = shoppingCartRepository.findById(shoppingCartId)
+                    .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
+        }
+
         log.info("Found shopping cart by user name: {}", shoppingCart);
 
         return shoppingCartMapper.shoppingCartToShoppingCartDto(shoppingCart);
