@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
 
         return PageableDtoMapper.toPageableDto(productMapper.productListToProductDtoList(products.getContent()),
                 sort,
-                sortOrder); // какой-то непонятный, невнятный вид ответа требуют тесты на выходе
+                sortOrder);
     }
 
     @Transactional
@@ -57,9 +57,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productMapper.productDtoToProduct(productDto);
 
         if (productDto.getProductId() == null || productDto.getProductId().isEmpty()) {
-            product.setProductId(UUID.randomUUID().toString()); // спецификация API обозначает, что id это значение
-            // типа String и должно выглядеть следующим образом - "3fa85f64-5717-4562-b3fc-2c963f66afa6", но при
-            // этом на вход id не дается, приходится задавать самому
+            product.setProductId(UUID.randomUUID().toString());
         }
 
         product = productRepository.save(product);
@@ -86,9 +84,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Boolean deleteProduct(String productId) {
         log.info("Deleting product {}", productId);
-        productId = productId.substring(1, productId.length() - 1); // какие-то странные тесты,
-        // здесь почему-то этот параметр передается в теле запроса, из-за этого строчка записывается
-        // как ""......"" - с двойными кавычками, поэтому приходится их убирать
+        productId = productId.substring(1, productId.length() - 1);
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
@@ -100,8 +96,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public Boolean setQuantity(String productId, QuantityState quantityState) { // здесь, например, productId
-        // передается в качестве параметра запроса и поэтому проблем с кавычками не возникает
+    public Boolean setQuantity(String productId, QuantityState quantityState) {
         log.info("Updating quantityState product {}", productId);
 
         Product product = productRepository.findById(productId)
