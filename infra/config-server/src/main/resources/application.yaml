@@ -9,6 +9,7 @@ spring:
         native:
           searchLocations:
             - classpath:config/telemetry/{application}/{profile}
+            - classpath:config/commerce/{application}/{profile}
 eureka:
   client:
     serviceUrl:
