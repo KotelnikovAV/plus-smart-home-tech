@@ -17,8 +17,7 @@ spring:
   cloud:
     openfeign:
       circuitbreaker:
-        group:
-          enabled: true
+        enabled: true
 
 logging:
   level:
