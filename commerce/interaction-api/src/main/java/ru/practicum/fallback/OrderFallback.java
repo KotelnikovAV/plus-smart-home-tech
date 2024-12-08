@@ -5,6 +5,7 @@ import ru.practicum.client.OrderClient;
 import ru.practicum.dto.CreateNewOrderRequestDto;
 import ru.practicum.dto.OrderDto;
 import ru.practicum.dto.ProductReturnRequestDto;
+import ru.practicum.dto.ShippedToDeliveryRequestDto;
 import ru.practicum.exception.ServerUnavailableException;
 
 import java.util.List;
@@ -70,5 +71,10 @@ public class OrderFallback implements OrderClient {
     @Override
     public OrderDto rollbackAssembleOrder(String orderId) {
         throw new ServerUnavailableException("Endpoint /api/v1/order/assembly/failed method GET is unavailable");
+    }
+
+    @Override
+    public void recordDeliveryData(ShippedToDeliveryRequestDto delivery) {
+        throw new ServerUnavailableException("Endpoint /api/v1/order/assembly/shipped method POST is unavailable");
     }
 }

@@ -9,6 +9,7 @@ import ru.practicum.client.OrderClient;
 import ru.practicum.dto.CreateNewOrderRequestDto;
 import ru.practicum.dto.OrderDto;
 import ru.practicum.dto.ProductReturnRequestDto;
+import ru.practicum.dto.ShippedToDeliveryRequestDto;
 import ru.practicum.order.service.OrderService;
 
 import java.util.List;
@@ -107,5 +108,12 @@ public class OrderController implements OrderClient {
     public OrderDto rollbackAssembleOrder(@RequestBody String orderId) {
         log.info("Rolling back assembly order {}", orderId);
         return orderService.rollbackAssembleOrder(orderId);
+    }
+
+    @PostMapping("shipped")
+    @Override
+    public void recordDeliveryData(@RequestBody ShippedToDeliveryRequestDto delivery) {
+        log.info("Recording delivery {}", delivery);
+        orderService.recordDeliveryData(delivery);
     }
 }

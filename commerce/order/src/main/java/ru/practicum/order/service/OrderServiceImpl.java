@@ -115,10 +115,6 @@ public class OrderServiceImpl implements OrderService {
         log.info("Delivering order");
 
         Order order = findOrderByOrderId(orderId);
-
-        DeliveryDto delivery = deliveryClient.findDelivery(order.getId());
-
-        order.setDeliveryId(delivery.getDeliveryId());
         order.setState(OrderState.ON_DELIVERY);
         log.info("Delivering order: {}", order);
 
@@ -210,6 +206,17 @@ public class OrderServiceImpl implements OrderService {
         log.info("Rolling back assembly order: {}", order);
 
         return orderMapper.orderToOrderDto(order);
+    }
+
+    @Override
+    public void recordDeliveryData(ShippedToDeliveryRequestDto delivery) {
+        log.info("Recording delivery data");
+
+        Order order = orderRepository.findById(delivery.getOrderId())
+                .orElseThrow(() -> new NoOrderFoundException("The order does not exist"));
+        order.setState(OrderState.ON_DELIVERY);
+        order.setDeliveryId(delivery.getDeliveryId());
+        log.info("Recording delivery data: {}", order);
     }
 
     private PageRequest getPageRequest(Integer page, Integer size, List<String> sort, String sortOrder) {

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.client.OrderClient;
 import ru.practicum.delivery.exception.DuplicateDeliveryException;
 import ru.practicum.delivery.exception.NoDeliveryFoundException;
 import ru.practicum.delivery.exception.NotExistentWarehouseAddressException;
@@ -14,6 +15,7 @@ import ru.practicum.delivery.repository.DeliveryRepository;
 import ru.practicum.dto.DeliveryDto;
 import ru.practicum.dto.DeliveryState;
 import ru.practicum.dto.OrderDto;
+import ru.practicum.dto.ShippedToDeliveryRequestDto;
 
 import java.util.UUID;
 
@@ -31,6 +33,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     private final DeliveryRepository deliveryRepository;
     private final DeliveryMapper deliveryMapper;
+    private final OrderClient orderClient;
 
     @Override
     @Transactional
@@ -45,6 +48,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setDeliveryId(UUID.randomUUID().toString());
         delivery.setDeliveryState(DeliveryState.CREATED);
         delivery = deliveryRepository.save(delivery);
+
+        orderClient.recordDeliveryData(new ShippedToDeliveryRequestDto(deliveryDto.getOrderId(),
+                delivery.getDeliveryId()));
+
         log.info("Saved delivery: {}", delivery);
 
         return deliveryMapper.deliveryToDeliveryDto(delivery);

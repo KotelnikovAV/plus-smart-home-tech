@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.CreateNewOrderRequestDto;
 import ru.practicum.dto.OrderDto;
 import ru.practicum.dto.ProductReturnRequestDto;
+import ru.practicum.dto.ShippedToDeliveryRequestDto;
 import ru.practicum.fallback.OrderFallback;
 
 import java.util.List;
@@ -52,4 +53,7 @@ public interface OrderClient {
 
     @PostMapping("/api/v1/order/assembly/failed")
     OrderDto rollbackAssembleOrder(@RequestBody String orderId);
+
+    @PostMapping("shipped")
+    void recordDeliveryData(@RequestBody ShippedToDeliveryRequestDto delivery);
 }

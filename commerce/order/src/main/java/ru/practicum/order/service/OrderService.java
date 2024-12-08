@@ -3,6 +3,7 @@ package ru.practicum.order.service;
 import ru.practicum.dto.CreateNewOrderRequestDto;
 import ru.practicum.dto.OrderDto;
 import ru.practicum.dto.ProductReturnRequestDto;
+import ru.practicum.dto.ShippedToDeliveryRequestDto;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface OrderService {
     OrderDto assembleOrder(String orderId);
 
     OrderDto rollbackAssembleOrder(String orderId);
+
+    void recordDeliveryData(ShippedToDeliveryRequestDto delivery);
 }
