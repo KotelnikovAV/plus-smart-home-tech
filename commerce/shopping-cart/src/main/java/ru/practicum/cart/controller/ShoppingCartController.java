@@ -66,4 +66,11 @@ public class ShoppingCartController implements ShoppingCartClient {
         log.info("Booking products: {}", username);
         return shoppingCartService.bookingProducts(username);
     }
+
+    @GetMapping("{username}")
+    @Override
+    public List<ShoppingCartDto> findShoppingCartsByUsername(@PathVariable String username) {
+        log.info("Find shopping cart by name: {}", username);
+        return shoppingCartService.findShoppingCartsIdByUsername(username);
+    }
 }
