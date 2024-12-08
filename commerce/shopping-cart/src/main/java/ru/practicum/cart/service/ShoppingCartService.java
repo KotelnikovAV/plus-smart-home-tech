@@ -8,15 +8,17 @@ import java.util.List;
 import java.util.Map;
 
 public interface ShoppingCartService {
-    ShoppingCartDto findShoppingCart(String userName, String shoppingCartId);
+    ShoppingCartDto findShoppingCart(String username, String shoppingCartId);
 
-    ShoppingCartDto saveShoppingCart(String userName, Map<String, Integer> products);
+    ShoppingCartDto saveShoppingCart(String username, Map<String, Integer> products);
 
-    void deleteShoppingCart(String userName);
+    void deleteShoppingCart(String username);
 
-    ShoppingCartDto updateShoppingCart(String userName, List<String> products);
+    ShoppingCartDto updateShoppingCart(String username, List<String> products);
 
-    ShoppingCartDto changeProductQuantity(String userName, ChangeProductQuantityRequestDto quantity);
+    ShoppingCartDto changeProductQuantity(String username, ChangeProductQuantityRequestDto quantity);
 
-    BookedProductsDto bookingProducts(String userName);
+    BookedProductsDto bookingProducts(String username);
+
+    List<ShoppingCartDto> findShoppingCartsIdByUsername(String username);
 }

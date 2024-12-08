@@ -17,6 +17,7 @@ import ru.practicum.dto.ShoppingCartDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -28,19 +29,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional(readOnly = true)
-    public ShoppingCartDto findShoppingCart(String userName, String shoppingCartId) {
+    public ShoppingCartDto findShoppingCart(String username, String shoppingCartId) {
         log.info("Find shopping cart");
         ShoppingCart shoppingCart;
 
-        if (userName == null && shoppingCartId == null) {
+        if (username == null && shoppingCartId == null) {
             throw new NotFoundException("Username and shopping cart id is null");
         }
 
-        if (userName != null && shoppingCartId != null) {
-            shoppingCart = shoppingCartRepository.findByIdAndUserName(shoppingCartId, userName)
+        if (username != null && shoppingCartId != null) {
+            shoppingCart = shoppingCartRepository.findByIdAndUsername(shoppingCartId, username)
                     .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
-        } else if (userName != null) {
-            shoppingCart = shoppingCartRepository.findByUserName(userName)
+        } else if (username != null) {
+            shoppingCart = shoppingCartRepository.findByUsernameAndActive(username, true)
                     .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
         } else {
             shoppingCart = shoppingCartRepository.findById(shoppingCartId)
@@ -54,50 +55,51 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public ShoppingCartDto saveShoppingCart(String userName, Map<String, Integer> products) {
-        log.info("Saving shopping cart {}", userName);
+    public ShoppingCartDto saveShoppingCart(String username, Map<String, Integer> products) {
+        log.info("Saving shopping cart {}", username);
 
-        if (shoppingCartRepository.existsByUserName(userName)) {
+        if (shoppingCartRepository.existsByUsername(username)) {
             throw new DataDuplicationException("This user already has an active shopping cart");
         }
 
-        ShoppingCart shoppingCart = new ShoppingCart("gerger", userName, products);
+        ShoppingCart shoppingCart = new ShoppingCart(UUID.randomUUID().toString(), username, true, products);
         shoppingCart = shoppingCartRepository.save(shoppingCart);
-        log.info("Saved shopping cart {}", userName);
+        warehouseClient.checkProducts(shoppingCartMapper.shoppingCartToShoppingCartDto(shoppingCart));
+        log.info("Saved shopping cart {}", username);
 
         return shoppingCartMapper.shoppingCartToShoppingCartDto(shoppingCart);
     }
 
     @Override
     @Transactional
-    public void deleteShoppingCart(String userName) {
-        log.info("Deleting shopping cart {}", userName);
-        shoppingCartRepository.deleteByUserName(userName);
-        log.info("Deleted shopping cart {}", userName);
+    public void deleteShoppingCart(String username) {
+        log.info("Deleting shopping cart {}", username);
+        shoppingCartRepository.deleteByUsernameAndActive(username, true);
+        log.info("Deleted shopping cart {}", username);
     }
 
     @Override
     @Transactional
-    public ShoppingCartDto updateShoppingCart(String userName, List<String> products) {
-        log.info("Updating shopping cart {}", userName);
+    public ShoppingCartDto updateShoppingCart(String username, List<String> products) {
+        log.info("Updating shopping cart {}", username);
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserName(userName)
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUsernameAndActive(username, true)
                 .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
 
         Map<String, Integer> quantityProducts = shoppingCart.getProducts();
         products.forEach(quantityProducts::remove);
-        log.info("Updated shopping cart {}", userName);
+        log.info("Updated shopping cart {}", username);
 
         return shoppingCartMapper.shoppingCartToShoppingCartDto(shoppingCart);
     }
 
     @Override
     @Transactional
-    public ShoppingCartDto changeProductQuantity(String userName,
+    public ShoppingCartDto changeProductQuantity(String username,
                                                  ChangeProductQuantityRequestDto quantity) {
-        log.info("Changing product quantity for user {}", userName);
+        log.info("Changing product quantity for user {}", username);
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserName(userName)
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUsernameAndActive(username, true)
                 .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
         Map<String, Integer> products = shoppingCart.getProducts();
 
@@ -112,12 +114,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public BookedProductsDto bookingProducts(String userName) {
-        log.info("Booking products for user {}", userName);
+    public BookedProductsDto bookingProducts(String username) {
+        log.info("Booking products for user {}", username);
 
-        ShoppingCart shoppingCart = shoppingCartRepository.findByUserName(userName)
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUsernameAndActive(username, true)
                 .orElseThrow(() -> new NotFoundException("Shopping cart not found"));
 
-        return warehouseClient.bookingProducts(shoppingCartMapper.shoppingCartToShoppingCartDto(shoppingCart));
+        return warehouseClient.checkProducts(shoppingCartMapper.shoppingCartToShoppingCartDto(shoppingCart));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ShoppingCartDto> findShoppingCartsIdByUsername(String username) {
+        log.info("Finding shopping cart by id {}", username);
+        List<ShoppingCart> shoppingCart = shoppingCartRepository.findByUsername(username);
+        log.info("Found shopping carts {}", username);
+        return shoppingCartMapper.shoppingCartListToShoppingCartDtoList(shoppingCart);
     }
 }

@@ -19,8 +19,8 @@ public interface WarehouseClient {
     @PostMapping("/api/v1/warehouse/return")
     void returnProducts(@RequestBody Map<String, Integer> products);
 
-    @PostMapping("/api/v1/warehouse/booking")
-    BookedProductsDto bookingProducts(@RequestBody @Valid ShoppingCartDto shoppingCart);
+    @PostMapping("/api/v1/warehouse/check")
+    BookedProductsDto checkProducts(@RequestBody @Valid ShoppingCartDto shoppingCart);
 
     @PostMapping("/api/v1/warehouse/assembly")
     BookedProductsDto assembleProducts
