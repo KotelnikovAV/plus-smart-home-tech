@@ -9,7 +9,7 @@ public interface WarehouseService {
 
     void returnProducts(Map<String, Integer> returnProducts);
 
-    BookedProductsDto bookingProducts(ShoppingCartDto shoppingCartDto);
+    BookedProductsDto checkProducts(ShoppingCartDto shoppingCartDto);
 
     BookedProductsDto assembleProducts(AssemblyProductForOrderFromShoppingCartRequestDto
                                                                                assemblyProduct);

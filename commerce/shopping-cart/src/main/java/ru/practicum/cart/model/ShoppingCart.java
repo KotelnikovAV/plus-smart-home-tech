@@ -16,8 +16,11 @@ public class ShoppingCart {
     @Id
     private String id;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column
+    private String username;
+
+    @Column
+    private boolean active;
 
     @ElementCollection
     @CollectionTable(name = "shopping_cart_mapping",

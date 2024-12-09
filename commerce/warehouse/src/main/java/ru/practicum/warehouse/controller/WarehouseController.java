@@ -34,10 +34,10 @@ public class WarehouseController implements WarehouseClient {
     }
 
     @Override
-    @PostMapping("booking")
-    public BookedProductsDto bookingProducts(@RequestBody @Valid ShoppingCartDto shoppingCart) {
+    @PostMapping("check")
+    public BookedProductsDto checkProducts(@RequestBody @Valid ShoppingCartDto shoppingCart) {
         log.info("Booking products: {}", shoppingCart);
-        return warehouseService.bookingProducts(shoppingCart);
+        return warehouseService.checkProducts(shoppingCart);
     }
 
     @Override

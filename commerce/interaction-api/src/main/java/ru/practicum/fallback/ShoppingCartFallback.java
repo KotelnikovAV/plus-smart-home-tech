@@ -42,4 +42,9 @@ public class ShoppingCartFallback implements ShoppingCartClient {
     public BookedProductsDto bookingProducts(String username) {
         throw new ServerUnavailableException("Endpoint /api/v1/shopping-cart/booking method POST is unavailable");
     }
+
+    @Override
+    public List<ShoppingCartDto> findShoppingCartsByUsername(String username) {
+        throw new ServerUnavailableException("Endpoint /api/v1/shopping-cart/{username} method GET is unavailable");
+    }
 }

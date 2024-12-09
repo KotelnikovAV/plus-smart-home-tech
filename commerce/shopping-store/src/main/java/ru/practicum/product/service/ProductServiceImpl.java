@@ -15,9 +15,7 @@ import ru.practicum.product.mapper.ProductMapper;
 import ru.practicum.product.model.Product;
 import ru.practicum.product.repository.ProductRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -84,6 +82,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Boolean deleteProduct(String productId) {
         log.info("Deleting product {}", productId);
+
+        if (productId == null || productId.isEmpty()) {
+            throw new NotFoundException("productId is empty");
+        }
         productId = productId.substring(1, productId.length() - 1);
 
         Product product = productRepository.findById(productId)
@@ -117,6 +119,19 @@ public class ProductServiceImpl implements ProductService {
         log.info("Found product {}", product);
 
         return productMapper.productToProductDto(product);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Double findPrice(Map<String, Integer> products) {
+        log.info("Finding price");
+
+        Set<String> productIds = products.keySet();
+        List<Product> productList = productRepository.findAllById(productIds);
+        Double price = productList.stream().
+                map(Product::getPrice).reduce(0.0, Double::sum);
+        log.info("Found price {} products", price);
+        return price;
     }
 
     private void updateFieldsProduct(Product product, ProductDto productDto) {

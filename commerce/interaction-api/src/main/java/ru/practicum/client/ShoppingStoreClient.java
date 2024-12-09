@@ -10,6 +10,7 @@ import ru.practicum.dto.QuantityState;
 import ru.practicum.fallback.ShoppingStoreFallback;
 
 import java.util.List;
+import java.util.Map;
 
 @FeignClient(name = "shopping-store", fallback = ShoppingStoreFallback.class)
 public interface ShoppingStoreClient {
@@ -35,4 +36,7 @@ public interface ShoppingStoreClient {
 
     @GetMapping("/api/v1/shopping-store/{productId}")
     ProductDto findProductById(@PathVariable String productId);
+
+    @GetMapping
+    Double findPrice(@RequestBody Map<String, Integer> products);
 }

@@ -9,6 +9,7 @@ import ru.practicum.dto.QuantityState;
 import ru.practicum.exception.ServerUnavailableException;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ShoppingStoreFallback implements ShoppingStoreClient {
@@ -41,5 +42,10 @@ public class ShoppingStoreFallback implements ShoppingStoreClient {
     @Override
     public ProductDto findProductById(String productId) {
         throw new ServerUnavailableException("Endpoint /api/v1/shopping-store/" + productId + " method POST is unavailable");
+    }
+
+    @Override
+    public Double findPrice(Map<String, Integer> products) {
+        throw new ServerUnavailableException("Endpoint /api/v1/shopping-store/quantityState method POST is unavailable");
     }
 }

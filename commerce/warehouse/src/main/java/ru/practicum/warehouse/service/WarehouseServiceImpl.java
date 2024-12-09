@@ -46,44 +46,24 @@ public class WarehouseServiceImpl implements WarehouseService {
 
         Set<String> productIds = returnProducts.keySet();
         List<Warehouse> warehouses = warehouseRepository.findAllById(productIds);
-
-        if (warehouses.size() != productIds.size()) {
-            throw new NoSpecifiedProductInWarehouseException("All items were not found during the return");
-        }
-
-        Map<String, Warehouse> warehouseMap = warehouses.stream()
-                .collect(Collectors.toMap(Warehouse::getProductId, warehouse -> warehouse));
-
-        for (String productId : productIds) {
-            Warehouse warehouse = warehouseMap.get(productId);
-            warehouse.setQuantity(warehouse.getQuantity() + returnProducts.get(productId));
-        }
-
+        returnProductsInWarehouse(productIds, warehouses, returnProducts);
         log.info("Returned products");
     }
 
     @Transactional
     @Override
-    public BookedProductsDto bookingProducts(ShoppingCartDto shoppingCartDto) {
+    public BookedProductsDto checkProducts(ShoppingCartDto shoppingCartDto) {
         log.info("Booking products");
         Map<String, Integer> quantityProducts = shoppingCartDto.getProducts();
 
         Set<String> productIds = quantityProducts.keySet();
         List<Warehouse> warehouses = warehouseRepository.findAllById(productIds);
-        Map<String, Warehouse> warehouseMap = warehouses.stream()
-                .collect(Collectors.toMap(Warehouse::getProductId, warehouse -> warehouse));
-
-        for (String productId : productIds) {
-            Warehouse warehouse = warehouseMap.get(productId);
-            warehouse.setQuantity(warehouse.getQuantity() - quantityProducts.get(productId));
-        }
 
         log.info("Booked products");
-
         return getBookedProducts(quantityProducts, warehouses);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public BookedProductsDto assembleProducts
             (AssemblyProductForOrderFromShoppingCartRequestDto assemblyProduct) {
@@ -95,6 +75,9 @@ public class WarehouseServiceImpl implements WarehouseService {
         Map<String, Integer> quantityProducts = shoppingCartDto.getProducts();
         Set<String> productIds = quantityProducts.keySet();
         List<Warehouse> warehouses = warehouseRepository.findAllById(productIds);
+
+        assembleProductsInWarehouse(shoppingCartDto, productIds, warehouses);
+        log.info("Assembled products");
 
         return getBookedProducts(quantityProducts, warehouses);
     }
@@ -117,11 +100,11 @@ public class WarehouseServiceImpl implements WarehouseService {
         log.info("Getting address");
 
         return AddressDto.builder()
-                .country("country")
-                .city("city")
-                .street("street")
-                .house("house")
-                .flat("flat")
+                .country("country1")
+                .city("city1")
+                .street("street1")
+                .house("house1")
+                .flat("flat1")
                 .build();
     }
 
@@ -145,5 +128,43 @@ public class WarehouseServiceImpl implements WarehouseService {
                 .reduce(false, (a, b) -> a || b));
 
         return bookedProductsDto;
+    }
+
+    private void assembleProductsInWarehouse(ShoppingCartDto shoppingCartDto,
+                                             Set<String> productIds,
+                                             List<Warehouse> warehouses) {
+        if (warehouses.size() != productIds.size()) {
+            throw new NoSpecifiedProductInWarehouseException("All items were not found during the return");
+        }
+
+        Map<String, Warehouse> warehouseMap = warehouses.stream()
+                .collect(Collectors.toMap(Warehouse::getProductId, warehouse -> warehouse));
+
+        for (String productId : productIds) {
+            Warehouse warehouse = warehouseMap.get(productId);
+
+            if (warehouse.getQuantity() < shoppingCartDto.getProducts().get(productId)) {
+                throw new NoSpecifiedProductInWarehouseException("There are not so many items in stock with id = "
+                        + productId);
+            }
+
+            warehouse.setQuantity(warehouse.getQuantity() - shoppingCartDto.getProducts().get(productId));
+        }
+    }
+
+    private void returnProductsInWarehouse(Set<String> productIds,
+                                           List<Warehouse> warehouses,
+                                           Map<String, Integer> returnProducts) {
+        if (warehouses.size() != productIds.size()) {
+            throw new NoSpecifiedProductInWarehouseException("All items were not found during the return");
+        }
+
+        Map<String, Warehouse> warehouseMap = warehouses.stream()
+                .collect(Collectors.toMap(Warehouse::getProductId, warehouse -> warehouse));
+
+        for (String productId : productIds) {
+            Warehouse warehouse = warehouseMap.get(productId);
+            warehouse.setQuantity(warehouse.getQuantity() + returnProducts.get(productId));
+        }
     }
 }

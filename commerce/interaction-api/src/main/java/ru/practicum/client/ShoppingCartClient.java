@@ -33,4 +33,7 @@ public interface ShoppingCartClient {
 
     @PostMapping("/api/v1/shopping-cart/booking")
     BookedProductsDto bookingProducts(@RequestParam String username);
+
+    @GetMapping("/api/v1/shopping-cart/{username}")
+    List<ShoppingCartDto> findShoppingCartsByUsername(@PathVariable String username);
 }
