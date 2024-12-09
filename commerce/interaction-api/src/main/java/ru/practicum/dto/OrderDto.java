@@ -20,7 +20,6 @@ public class OrderDto {
     private Map<String, Integer> products;
     private String paymentId;
     private String deliveryId;
-    @NotNull
     private OrderState state;
     private Double deliveryWeight;
     private Double deliveryVolume;

@@ -112,7 +112,7 @@ public class OrderController implements OrderClient {
 
     @PostMapping("shipped")
     @Override
-    public void recordDeliveryData(@RequestBody ShippedToDeliveryRequestDto delivery) {
+    public void recordDeliveryData(@RequestBody @Valid ShippedToDeliveryRequestDto delivery) {
         log.info("Recording delivery {}", delivery);
         orderService.recordDeliveryData(delivery);
     }

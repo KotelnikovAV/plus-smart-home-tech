@@ -39,3 +39,13 @@ resilience4j:
         slidingWindowType: COUNT_BASED
         minimumNumberOfCalls: 5
         automaticTransitionFromOpenToHalfOpenEnabled: true
+
+delivery:
+  multipliers:
+    "FRAGILITY_MULTIPLIER": 0.2
+    "WEIGHT_MULTIPLIER": 0.2
+    "VOLUME_MULTIPLIER": 0.2
+    "ADDRESS_MULTIPLIER": 0.2
+  address1: "country1city1street1house1flat1"
+  address2: "country2city2street2house2flat2"
+  basicDeliveryCost: 5.0

@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 public class AssemblyProductForOrderFromShoppingCartRequestDto {
     @NotBlank
     private String shoppingCartId;
+    @NotBlank
     private String orderId;
 }

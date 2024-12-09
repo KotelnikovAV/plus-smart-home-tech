@@ -9,6 +9,7 @@ import ru.practicum.client.DeliveryClient;
 import ru.practicum.client.ShoppingStoreClient;
 import ru.practicum.dto.OrderDto;
 import ru.practicum.dto.PaymentDto;
+import ru.practicum.payment.configuration.PaymentConfig;
 import ru.practicum.payment.exception.NoPaymentFoundException;
 import ru.practicum.payment.exception.NotEnoughInfoInOrderToCalculateException;
 import ru.practicum.payment.mapper.PaymentMapper;
@@ -20,10 +21,9 @@ import ru.practicum.payment.repository.PaymentRepository;
 @Service
 @Slf4j
 public class PaymentServiceImpl implements PaymentService {
-    private static final Double TAX_MULTIPLIER = 0.1;
-
     private final PaymentRepository paymentRepository;
     private final PaymentMapper paymentMapper;
+    private final PaymentConfig paymentConfig;
     private final ShoppingStoreClient shoppingStoreClient;
     private final DeliveryClient deliveryClient;
 
@@ -34,14 +34,13 @@ public class PaymentServiceImpl implements PaymentService {
 
         double priceProduct = calculationCostProducts(order);
         double priceDelivery = deliveryClient.calculationTotalCostDelivery(order);
-        double tax = (priceProduct + priceDelivery) * TAX_MULTIPLIER;
+        double tax = (priceProduct + priceDelivery) * paymentConfig.getTaxMultiplier();
 
         Payment payment = new Payment();
         payment.setTotalPayment(priceProduct + priceDelivery + tax);
         payment.setDeliveryTotal(priceDelivery);
         payment.setFeeTotal(tax);
         payment.setPaymentStatus(PaymentStatus.PENDING);
-
         payment = paymentRepository.save(payment);
         log.info("A payment has been formed {}", payment);
 
@@ -54,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         double priceProduct = calculationCostProducts(order);
         double priceDelivery = deliveryClient.calculationTotalCostDelivery(order);
-        double tax = (priceProduct + priceDelivery) * TAX_MULTIPLIER;
+        double tax = (priceProduct + priceDelivery) * paymentConfig.getTaxMultiplier();
         log.info("Total cost order has been calculated {}", priceProduct + priceDelivery + tax);
 
         return priceProduct + priceDelivery + tax;
@@ -65,13 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
     public void payingOrder(String orderId) {
         log.info("Paying order {}", orderId);
 
-        if (checkValidOrderId(orderId)) {
-            throw new NotEnoughInfoInOrderToCalculateException("The order id must not be empty");
-        }
-
-        orderId = orderId.substring(1, orderId.length() - 1);
-        Payment payment = paymentRepository.findById(orderId)
-                .orElseThrow(() -> new NoPaymentFoundException("The order does not exist"));
+        Payment payment = findPaymentByOrderId(orderId);
         payment.setPaymentStatus(PaymentStatus.SUCCESS);
         log.info("The payment was successful");
     }
@@ -95,18 +88,18 @@ public class PaymentServiceImpl implements PaymentService {
     public void rollbackPayingOrder(String orderId) {
         log.info("Rolling back order {}", orderId);
 
-        if (checkValidOrderId(orderId)) {
-            throw new NotEnoughInfoInOrderToCalculateException("The order id must not be empty");
-        }
-
-        orderId = orderId.substring(1, orderId.length() - 1);
-        Payment payment = paymentRepository.findById(orderId)
-                .orElseThrow(() -> new NoPaymentFoundException("The order does not exist"));
+        Payment payment = findPaymentByOrderId(orderId);
         payment.setPaymentStatus(PaymentStatus.FAILED);
         log.info("The payment was rolled back");
     }
 
-    private boolean checkValidOrderId(String orderId) {
-        return orderId == null || orderId.isEmpty();
+    private Payment findPaymentByOrderId(String orderId) {
+        if (orderId == null || orderId.isEmpty()) {
+            throw new NotEnoughInfoInOrderToCalculateException("The order id must not be empty");
+        }
+
+        orderId = orderId.substring(1, orderId.length() - 1);
+        return paymentRepository.findById(orderId)
+                .orElseThrow(() -> new NoPaymentFoundException("The order does not exist"));
     }
 }

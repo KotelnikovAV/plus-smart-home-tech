@@ -66,20 +66,22 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto returnOrder(ProductReturnRequestDto productReturn) {
         log.info("Returning order");
 
         Order order = orderRepository.findById(productReturn.getOrderId())
                 .orElseThrow(() -> new NoOrderFoundException("The order does not exist"));
+        order.setState(OrderState.CANCELED);
 
         warehouseClient.returnProducts(productReturn.getProducts());
-        order.setState(OrderState.CANCELED);
 
         log.info("Returned order: {}", order);
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto payingOrder(String orderId) {
         log.info("Paying order");
@@ -97,6 +99,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto rollbackPayment(String orderId) {
         log.info("Rolling back payment order");
@@ -110,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto deliverOrder(String orderId) {
         log.info("Delivering order");
@@ -121,6 +125,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto rollbackDeliverOrder(String orderId) {
         log.info("Rolling back delivery order");
@@ -135,6 +140,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto completeOrder(String orderId) {
         log.info("Completing order");
@@ -146,6 +152,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto calculateCostOrder(String orderId) {
         log.info("Calculating cost order");
@@ -160,6 +167,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto calculateCostDelivery(String orderId) {
         log.info("Calculating cost delivery");
@@ -174,6 +182,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto assembleOrder(String orderId) {
         log.info("Assembling order");
@@ -192,6 +201,7 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public OrderDto rollbackAssembleOrder(String orderId) {
         log.info("Rolling back assembly order");
@@ -203,11 +213,13 @@ public class OrderServiceImpl implements OrderService {
         order.setFragile(false);
 
         warehouseClient.returnProducts(order.getProducts());
+
         log.info("Rolling back assembly order: {}", order);
 
         return orderMapper.orderToOrderDto(order);
     }
 
+    @Transactional
     @Override
     public void recordDeliveryData(ShippedToDeliveryRequestDto delivery) {
         log.info("Recording delivery data");

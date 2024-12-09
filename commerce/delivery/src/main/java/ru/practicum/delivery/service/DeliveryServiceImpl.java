@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.OrderClient;
+import ru.practicum.delivery.configuration.DeliveryConfig;
 import ru.practicum.delivery.exception.DuplicateDeliveryException;
 import ru.practicum.delivery.exception.NoDeliveryFoundException;
 import ru.practicum.delivery.exception.NotExistentWarehouseAddressException;
@@ -12,28 +13,19 @@ import ru.practicum.delivery.mapper.DeliveryMapper;
 import ru.practicum.delivery.model.Address;
 import ru.practicum.delivery.model.Delivery;
 import ru.practicum.delivery.repository.DeliveryRepository;
-import ru.practicum.dto.DeliveryDto;
-import ru.practicum.dto.DeliveryState;
-import ru.practicum.dto.OrderDto;
-import ru.practicum.dto.ShippedToDeliveryRequestDto;
+import ru.practicum.dto.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class DeliveryServiceImpl implements DeliveryService {
-    private static final String ADDRESS_1 = "country1city1street1house1flat1";  // абстрактные адреса
-    private static final String ADDRESS_2 = "country2city2street2house2flat2";
-    private static final Double BASIC_DELIVERY_COST = 5.0;
-    private static final Double FRAGILITY_MULTIPLIER = 0.2;
-    private static final Double WEIGHT_MULTIPLIER = 0.2;
-    private static final Double VOLUME_MULTIPLIER = 0.2;
-    private static final Double ADDRESS_MULTIPLIER = 0.2;
-
     private final DeliveryRepository deliveryRepository;
     private final DeliveryMapper deliveryMapper;
     private final OrderClient orderClient;
+    private final DeliveryConfig deliveryConfig;
 
     @Override
     @Transactional
@@ -93,17 +85,21 @@ public class DeliveryServiceImpl implements DeliveryService {
         Delivery delivery = deliveryRepository.findByOrderId(orderDto.getOrderId())
                 .orElseThrow(() -> new NoDeliveryFoundException("There is no delivery for such an order"));
 
-        double deliveryCost = BASIC_DELIVERY_COST * getMultiplierForWarehouseAddress(delivery.getFromAddress());
+        double deliveryCost = deliveryConfig.getBasicDeliveryCost() *
+                getMultiplierForWarehouseAddress(delivery.getFromAddress());
+        Map<DeliveryMultipliers, Double> multipliers = deliveryConfig.getMultipliers();
 
         if (orderDto.isFragile()) {
-            deliveryCost = deliveryCost + deliveryCost * FRAGILITY_MULTIPLIER;
+            deliveryCost = deliveryCost + deliveryCost * multipliers.get(DeliveryMultipliers.FRAGILITY_MULTIPLIER);
         }
 
-        deliveryCost = deliveryCost + orderDto.getDeliveryWeight() * WEIGHT_MULTIPLIER;
-        deliveryCost = deliveryCost + orderDto.getDeliveryVolume() * VOLUME_MULTIPLIER;
+        deliveryCost = deliveryCost +
+                orderDto.getDeliveryWeight() * multipliers.get(DeliveryMultipliers.WEIGHT_MULTIPLIER);
+        deliveryCost = deliveryCost +
+                orderDto.getDeliveryVolume() * multipliers.get(DeliveryMultipliers.VOLUME_MULTIPLIER);
 
         if (!delivery.getFromAddress().getStreet().equals(delivery.getToAddress().getStreet())) {
-            deliveryCost = deliveryCost + deliveryCost * ADDRESS_MULTIPLIER;
+            deliveryCost = deliveryCost + deliveryCost * multipliers.get(DeliveryMultipliers.ADDRESS_MULTIPLIER);
         }
 
         return deliveryCost;
@@ -126,9 +122,10 @@ public class DeliveryServiceImpl implements DeliveryService {
                 addressDto.getStreet() +
                 addressDto.getHouse() +
                 addressDto.getFlat();
-        if (addressWarehouse.equals(ADDRESS_1)) {
+
+        if (addressWarehouse.equals(deliveryConfig.getAddress1())) {
             return 1;
-        } else if (addressWarehouse.equals(ADDRESS_2)) {
+        } else if (addressWarehouse.equals(deliveryConfig.getAddress2())) {
             return 2;
         } else {
             throw new NotExistentWarehouseAddressException("Non-existent warehouse address");

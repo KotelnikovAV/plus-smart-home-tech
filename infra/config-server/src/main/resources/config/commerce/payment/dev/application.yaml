@@ -47,3 +47,6 @@ resilience4j:
         slidingWindowType: COUNT_BASED
         minimumNumberOfCalls: 5
         automaticTransitionFromOpenToHalfOpenEnabled: true
+
+payment:
+  taxMultiplier: 0.1
