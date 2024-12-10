@@ -38,6 +38,27 @@ spring:
           filters:
             - PrefixPath=/api/v1
             - CircuitBreaker=WarehouseClient
+        - id: order_circuitbreaker_route
+          uri: lb://order
+          predicates:
+            - Path=/order/**
+          filters:
+            - PrefixPath=/api/v1
+            - CircuitBreaker=OrderClient
+        - id: payment_circuitbreaker_route
+          uri: lb://payment
+          predicates:
+            - Path=/payment/**
+          filters:
+            - PrefixPath=/api/v1
+            - CircuitBreaker=PaymentClient
+        - id: delivery_circuitbreaker_route
+          uri: lb://delivery
+          predicates:
+            - Path=/delivery/**
+          filters:
+            - PrefixPath=/api/v1
+            - CircuitBreaker=DeliveryClient
 
 resilience4j:
   circuitbreaker:
@@ -59,6 +80,30 @@ resilience4j:
         minimumNumberOfCalls: 5
         automaticTransitionFromOpenToHalfOpenEnabled: true
       WarehouseClient:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      DeliveryClient:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      OrderClient:
+        slidingWindowSize: 20
+        failureRateThreshold: 30
+        waitDurationInOpenState: 10000
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      PaymentClient:
         slidingWindowSize: 10
         failureRateThreshold: 50
         waitDurationInOpenState: 10000

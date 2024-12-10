@@ -13,6 +13,7 @@ import ru.practicum.dto.QuantityState;
 import ru.practicum.product.service.ProductService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/shopping-store")
@@ -67,5 +68,12 @@ public class ProductController implements ShoppingStoreClient {
     public ProductDto findProductById(@PathVariable String productId) {
         log.info("findProductById called. productId = {}", productId);
         return productService.findProductById(productId);
+    }
+
+    @GetMapping("price")
+    @Override
+    public Double findPrice(@RequestBody Map<String, Integer> products) {
+        log.info("findPrice called. products = {}", products);
+        return productService.findPrice(products);
     }
 }

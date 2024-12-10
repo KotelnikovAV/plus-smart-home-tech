@@ -20,8 +20,8 @@ public class WarehouseFallback implements WarehouseClient {
     }
 
     @Override
-    public BookedProductsDto bookingProducts(ShoppingCartDto shoppingCart) {
-        throw new ServerUnavailableException("Endpoint /api/v1/warehouse/booking method POST is unavailable");
+    public BookedProductsDto checkProducts(ShoppingCartDto shoppingCart) {
+        throw new ServerUnavailableException("Endpoint /api/v1/warehouse/check method POST is unavailable");
     }
 
     @Override
