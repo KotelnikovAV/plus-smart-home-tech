@@ -44,6 +44,6 @@ delivery:
     "WEIGHT_MULTIPLIER": 0.2
     "VOLUME_MULTIPLIER": 0.2
     "ADDRESS_MULTIPLIER": 0.2
-  address1: "country1city1street1house1flat1"
-  address2: "country2city2street2house2flat2"
+  warehouseAddress1: "country1city1street1house1flat1"
+  warehouseAddress2: "country2city2street2house2flat2"
   basicDeliveryCost: 5.0

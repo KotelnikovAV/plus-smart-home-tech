@@ -13,8 +13,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @ConfigurationProperties("delivery")
 public class DeliveryConfig {
-    private final String address1;
-    private final String address2;
+    private final String warehouseAddress1;
+    private final String warehouseAddress2;
     private final Double basicDeliveryCost;
     private final Map<DeliveryMultipliers, Double> multipliers;
 }

@@ -37,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> findByUsername(String username, Integer page, Integer size, List<String> sort, String order) {
         log.info("Finding orders");
 
-        if (username == null || username.isEmpty()) {
+        if (username == null || username.isBlank()) {
             throw new NotAuthorizedUserException("The user is not logged in");
         }
 
@@ -282,7 +282,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Order findOrderByOrderId(String orderId) {
-        if (orderId == null || orderId.isEmpty()) {
+        if (orderId == null || orderId.isBlank()) {
             throw new NoOrderFoundException("orderId is empty");
         }
 

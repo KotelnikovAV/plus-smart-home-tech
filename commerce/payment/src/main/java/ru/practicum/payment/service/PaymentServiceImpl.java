@@ -94,7 +94,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private Payment findPaymentByOrderId(String orderId) {
-        if (orderId == null || orderId.isEmpty()) {
+        if (orderId == null || orderId.isBlank()) {
             throw new NotEnoughInfoInOrderToCalculateException("The order id must not be empty");
         }
 

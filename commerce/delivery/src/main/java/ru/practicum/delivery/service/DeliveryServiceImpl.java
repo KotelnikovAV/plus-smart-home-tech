@@ -60,6 +60,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
+    @Transactional
     public void makingInProgressDelivered(String orderId) {
         log.info("Making a in progress delivery for order: {}", orderId);
 
@@ -123,9 +124,9 @@ public class DeliveryServiceImpl implements DeliveryService {
                 addressDto.getHouse() +
                 addressDto.getFlat();
 
-        if (addressWarehouse.equals(deliveryConfig.getAddress1())) {
+        if (addressWarehouse.equals(deliveryConfig.getWarehouseAddress1())) {
             return 1;
-        } else if (addressWarehouse.equals(deliveryConfig.getAddress2())) {
+        } else if (addressWarehouse.equals(deliveryConfig.getWarehouseAddress2())) {
             return 2;
         } else {
             throw new NotExistentWarehouseAddressException("Non-existent warehouse address");

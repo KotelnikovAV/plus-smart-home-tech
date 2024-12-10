@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productMapper.productDtoToProduct(productDto);
 
-        if (productDto.getProductId() == null || productDto.getProductId().isEmpty()) {
+        if (productDto.getProductId() == null || productDto.getProductId().isBlank()) {
             product.setProductId(UUID.randomUUID().toString());
         }
 
@@ -83,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
     public Boolean deleteProduct(String productId) {
         log.info("Deleting product {}", productId);
 
-        if (productId == null || productId.isEmpty()) {
+        if (productId == null || productId.isBlank()) {
             throw new NotFoundException("productId is empty");
         }
         productId = productId.substring(1, productId.length() - 1);
@@ -128,8 +128,9 @@ public class ProductServiceImpl implements ProductService {
 
         Set<String> productIds = products.keySet();
         List<Product> productList = productRepository.findAllById(productIds);
-        Double price = productList.stream().
-                map(Product::getPrice).reduce(0.0, Double::sum);
+        Double price = productList.stream()
+                .map(Product::getPrice)
+                .reduce(0.0, Double::sum);
         log.info("Found price {} products", price);
         return price;
     }
