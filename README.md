@@ -48,3 +48,10 @@ SmartHome — это приложение, объединяющее интерн
 
 ## 3. Техническая документация проекта.
 Спецификация API в формате openapi:
+- модуль shopping-store — [shopping-store-spec.json](https://github.com/user-attachments/files/18723601/shopping-store-spec.json);
+- модуль shopping-cart — [shopping-cart-spec.json](https://github.com/user-attachments/files/18723603/shopping-cart-spec.json);
+- модуль order — [order-spec.json](https://github.com/user-attachments/files/18723604/order-spec.json);
+- модуль warehouse — [warehouse-spec.json](https://github.com/user-attachments/files/18723606/warehouse-spec.json);
+- модуль payment — [payment-spec.json](https://github.com/user-attachments/files/18723607/payment-spec.json);
+- модуль delivery — [delivery-spec.json](https://github.com/user-attachments/files/18723608/delivery-spec.json);
+- модуль telemetry - [telemetry-spec.json](https://github.com/user-attachments/files/18723609/telemetry-spec.json).
